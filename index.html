@@ -41,7 +41,7 @@ button{font:inherit;cursor:pointer}
 header.topo{background:var(--bordo);color:var(--papel);position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.25)}
 .topo > .wrap{display:flex;align-items:center;gap:20px;min-height:76px}
 .marca{display:flex;align-items:center;gap:12px;text-decoration:none}
-.marca img,.sobre img,.idade img{border-radius:50%}
+.marca img,.idade img{border-radius:50%}
 .marca img{width:54px;height:54px}
 .marca span{font-family:var(--serif);font-size:26px;letter-spacing:.06em;line-height:1}
 .marca small{display:block;font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--ouro-claro);margin-top:4px}
@@ -117,10 +117,6 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,38px);lin
 .passos strong{display:block;font-size:17px;margin-bottom:4px}
 .passos span{color:var(--cinza)}
 
-/* sobre */
-.sobre .wrap{display:grid;grid-template-columns:200px 1fr;gap:48px;align-items:center}
-.sobre img{width:200px;height:200px}
-.sobre p{max-width:62ch;font-size:17px;margin:14px 0 0}
 
 /* rodapé */
 footer{background:var(--bordo-escuro);color:#e6d6c6;font-size:14.5px}
@@ -177,8 +173,6 @@ aside.carrinho.aberto{transform:none}
   .abertura .acoes{padding-bottom:28px}
   .prateleira .garrafa img{height:180px}
   .vantagens .wrap,.passos{grid-template-columns:1fr;gap:18px}
-  .sobre .wrap{grid-template-columns:1fr;gap:20px}
-  .sobre img{width:140px;height:140px}
   footer .wrap{grid-template-columns:1fr}
 }
 @media (max-width:640px){
@@ -237,7 +231,6 @@ aside.carrinho.aberto{transform:none}
       <a href="#vinhos" data-filtro="Branco">Brancos</a>
       <a href="#vinhos" data-filtro="Espumante">Espumantes</a>
       <a href="#como-pedir">Como pedir</a>
-      <a href="#sobre">Sobre nós</a>
     </div>
   </nav>
 </header>
@@ -285,15 +278,6 @@ aside.carrinho.aberto{transform:none}
     </div>
   </section>
 
-  <section class="bloco sobre" id="sobre">
-    <div class="wrap">
-      <img src="img/selo.png" alt="Selo da Malbê Vinhos Selecionados">
-      <div>
-        <h2>Sobre a Malbê</h2>
-        <p>A Malbê é do Ruhan e da Isabele. A gente compra em pequenos lotes do outro lado da fronteira, escolhe rótulos que gosta de beber e traz poucas caixas de cada. Por isso o estoque muda a cada viagem: quando um vinho acaba, pode demorar até voltar.</p>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer>
@@ -314,7 +298,6 @@ aside.carrinho.aberto{transform:none}
       <ul>
         <li><a href="#vinhos">Nossos vinhos</a></li>
         <li><a href="#como-pedir">Como pedir</a></li>
-        <li><a href="#sobre">Sobre nós</a></li>
       </ul>
     </div>
   </div>
