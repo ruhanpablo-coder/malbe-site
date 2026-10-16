@@ -46,18 +46,25 @@ function extrairProdutos(html){
   return achados;
 }
 
+/* texto limpo e com tamanho máximo; o catálogo vem de outro site, então nada é confiável */
+const texto = (x, max) => typeof x === "string" ? x.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, max) : "";
+const valido = p => Number.isInteger(p.id) && p.nome
+  && /^https:\/\/cdn\.mistral\.com\.br\/[\w./-]+$/.test(p.foto)
+  && /^https:\/\/www\.mistral\.com\.br\/[\w./-]+$/.test(p.link)
+  && (p.preco_mistral === null || (Number.isFinite(p.preco_mistral) && p.preco_mistral > 0 && p.preco_mistral < 100000));
+
 const enxuto = o => ({
-  id: o.id,
-  nome: o.title,
-  vinicola: o.title_producers || "",
-  tipo: o.title_product_type || o.product_type || "",
-  uva: (o.all_grapes || []).map(g => g.title).join(", ") || o.grape || "",
-  pais: o.title_country || "",
-  regiao: [o.region, o.sub_region].filter(Boolean).join(", "),
-  garrafa: o.bottle_size || "",
-  descricao: o.description || "",
-  harmonizacao: o.harmonization || "",
-  pontos: o.avaliation_note || "",
+  id: Number(o.id),
+  nome: texto(o.title, 160),
+  vinicola: texto(o.title_producers, 120),
+  tipo: texto(o.title_product_type || o.product_type, 40),
+  uva: texto((Array.isArray(o.all_grapes) ? o.all_grapes : []).map(g => g && g.title).filter(Boolean).join(", ") || o.grape, 120),
+  pais: texto(o.title_country, 60),
+  regiao: texto([o.region, o.sub_region].filter(Boolean).join(", "), 120),
+  garrafa: texto(o.bottle_size, 20),
+  descricao: texto(o.description, 1200),
+  harmonizacao: texto(o.harmonization, 400),
+  pontos: texto(o.avaliation_note, 40),
   preco_mistral: typeof o.sale_price === "number" ? o.sale_price : null,
   foto: o.image_link,
   link: o.link,
@@ -75,8 +82,8 @@ for(const base of LISTAGENS){
     const url = pagina === 1 ? base : `${base}?page=${pagina}`;
     const html = await baixar(url);
     const produtos = extrairProdutos(html);
-    const novos = produtos.filter(p => !todos.has(p.id));
-    novos.forEach(p => todos.set(p.id, enxuto(p)));
+    const novos = produtos.filter(p => !todos.has(Number(p.id)));
+    novos.map(enxuto).filter(valido).forEach(p => todos.set(p.id, p));
     console.log(`${url}: ${produtos.length} produtos, ${novos.length} novos`);
     if(!novos.length) break;
     await dormir(PAUSA_MS);
