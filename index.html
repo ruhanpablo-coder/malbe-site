@@ -140,6 +140,13 @@ footer h4{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--pa
 footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 footer a{text-decoration:none}
 footer a:hover{text-decoration:underline}
+footer .com-ic{display:inline-flex;align-items:center;gap:10px;margin:0}
+footer .ic{width:18px;height:18px;flex:none;color:var(--ouro)}
+footer .redes{display:flex;gap:10px;margin-top:18px}
+footer .redes a{width:40px;height:40px;border-radius:50%;border:1px solid rgba(231,207,156,.35);display:grid;place-items:center}
+footer .redes a:hover{border-color:var(--ouro);background:rgba(185,138,62,.12);text-decoration:none}
+footer .redes .ic{width:19px;height:19px;color:var(--ouro-claro)}
+.mais18{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1.5px solid #bfa9a0;font-size:10.5px;font-weight:600;flex:none}
 .legal{border-top:1px solid rgba(231,207,156,.15);padding:18px 0;font-size:13px;color:#bfa9a0}
 .legal .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:0;padding-bottom:0}
 
@@ -298,26 +305,27 @@ aside.carrinho.aberto{transform:none}
   <div class="wrap">
     <div>
       <h4>Malbê Vinhos Selecionados</h4>
-      <p id="rodape-cidade"></p>
+      <p class="com-ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg><span id="rodape-cidade"></span></p>
+      <div class="redes"><a id="wa-redes" href="#" target="_blank" rel="noopener" aria-label="WhatsApp da Malbê"><svg class="ic" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.2 1.3 3.4c.2.2 2.3 3.5 5.6 4.9 2.1.9 2.9 1 3.9.8.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg></a><a id="ig-redes" href="#" target="_blank" rel="noopener" aria-label="Instagram da Malbê"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a></div>
     </div>
     <div>
       <h4>Atendimento</h4>
       <ul>
-        <li><a id="wa-rodape" href="#" target="_blank" rel="noopener">WhatsApp</a></li>
-        <li><a id="ig-rodape" href="#" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a class="com-ic" id="wa-rodape" href="#" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.2 1.3 3.4c.2.2 2.3 3.5 5.6 4.9 2.1.9 2.9 1 3.9.8.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>WhatsApp</a></li>
+        <li><a class="com-ic" id="ig-rodape" href="#" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>Instagram</a></li>
       </ul>
     </div>
     <div>
       <h4>Navegue</h4>
       <ul>
-        <li><a href="#vinhos">Nossos vinhos</a></li>
-        <li><a href="#como-pedir">Como pedir</a></li>
+        <li><a class="com-ic" href="#vinhos"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2h4v4l1.5 3v12a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V9L10 6z"/><path d="M8.5 13h7"/></svg>Nossos vinhos</a></li>
+        <li><a class="com-ic" href="#como-pedir"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/></svg>Como pedir</a></li>
       </ul>
     </div>
   </div>
   <div class="legal">
     <div class="wrap">
-      <span>Venda proibida para menores de 18 anos. Se beber, não dirija.</span>
+      <span class="com-ic"><span class="mais18" aria-hidden="true">18+</span>Venda proibida para menores de 18 anos. Se beber, não dirija.</span>
       <span>© <span id="ano"></span> Malbê Vinhos Selecionados</span>
     </div>
   </div>
@@ -396,8 +404,8 @@ $("#aviso").append(LOJA.aviso);
 $("#rodape-cidade").textContent = LOJA.cidade;
 $("#ano").textContent = new Date().getFullYear();
 const ola = "Olá, Malbê! Vim pelo site e queria saber sobre os vinhos.";
-["#wa-abertura","#wa-rodape","#wa-flutuante"].forEach(s => $(s).href = waLink(ola));
-$("#ig-rodape").href = LOJA.instagram;
+["#wa-abertura","#wa-rodape","#wa-redes","#wa-flutuante"].forEach(s => $(s).href = waLink(ola));
+$("#ig-rodape").href = $("#ig-redes").href = LOJA.instagram;
 $("#vantagens").innerHTML = LOJA.vantagens.map(([t,d,i]) =>
   `<div class="vantagem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">${ICONES[i]}</svg><div><strong>${t}</strong>${d ? `<span>${d}</span>` : ""}</div></div>`).join("");
 
