@@ -37,6 +37,8 @@ button{font:inherit;cursor:pointer}
 
 /* faixa de aviso */
 .aviso{background:var(--bordo-escuro);color:var(--ouro-claro);font-size:13.5px;text-align:center;padding:8px 16px}
+.aviso .ponto{display:inline-block;width:9px;height:9px;border-radius:50%;background:#2ecc71;margin-right:9px;vertical-align:1px;box-shadow:0 0 0 0 rgba(46,204,113,.7);animation:pulsa 1.8s ease-out infinite}
+@keyframes pulsa{0%{box-shadow:0 0 0 0 rgba(46,204,113,.7)}70%{box-shadow:0 0 0 8px rgba(46,204,113,0)}100%{box-shadow:0 0 0 0 rgba(46,204,113,0)}}
 
 /* cabeçalho */
 header.topo{background:var(--bordo);color:var(--papel);position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.25)}
@@ -389,7 +391,8 @@ let carrinho = ler("malbe-carrinho", {});
 let filtro = "todos";
 
 /* textos e links */
-$("#aviso").textContent = LOJA.aviso;
+$("#aviso").innerHTML = `<span class="ponto" aria-hidden="true"></span>`;
+$("#aviso").append(LOJA.aviso);
 $("#rodape-cidade").textContent = LOJA.cidade;
 $("#ano").textContent = new Date().getFullYear();
 const ola = "Olá, Malbê! Vim pelo site e queria saber sobre os vinhos.";
