@@ -7,7 +7,10 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Malbê Vinhos Selecionados</title>
 <meta name="description" content="Vinhos argentinos selecionados pela Malbê. Escolha os rótulos e faça o pedido pelo WhatsApp.">
-<link rel="icon" href="img/selo.png">
+<link rel="icon" href="img/marca/icone.svg" type="image/svg+xml">
+<link rel="icon" href="img/marca/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/marca/apple-touch-icon.png">
+<meta name="theme-color" content="#5c0d1d">
 <link rel="canonical" href="https://www.malbevinhos.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Malbê Vinhos Selecionados">
@@ -60,7 +63,7 @@ button{font:inherit;cursor:pointer}
 header.topo{background:var(--bordo);color:var(--papel);position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.25)}
 .topo > .wrap{display:flex;align-items:center;gap:20px;min-height:76px}
 .marca{display:flex;align-items:center;gap:12px;text-decoration:none}
-.marca img,.idade img{border-radius:50%}
+.marca img{border-radius:50%}
 .marca img{width:54px;height:54px}
 .marca span{font-family:var(--marca);font-weight:500;font-size:27px;letter-spacing:.08em;line-height:1}
 .marca small{display:block;font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--ouro-claro);margin-top:4px}
@@ -208,7 +211,7 @@ aside.carrinho.aberto{transform:none}
 .idade{position:fixed;inset:0;z-index:60;background:rgba(58,7,18,.92);display:grid;place-items:center;padding:20px}
 .idade[hidden]{display:none}
 .idade div{background:var(--papel);border-radius:10px;max-width:400px;padding:32px 28px;text-align:center}
-.idade img{width:96px;height:96px;margin:0 auto 14px}
+.idade img{width:132px;height:132px;margin:0 auto 16px}
 .idade h2{font-family:var(--serif)}
 .idade h2{font-size:26px;margin-bottom:8px}
 .idade p{color:var(--cinza);margin:0 0 20px}
@@ -241,7 +244,7 @@ aside.carrinho.aberto{transform:none}
 
 <div class="idade" id="idade" hidden role="dialog" aria-modal="true" aria-labelledby="idade-titulo">
   <div>
-    <img src="img/selo.png" alt="">
+    <img src="img/marca/selo.svg" alt="">
     <h2 id="idade-titulo">Você tem 18 anos ou mais?</h2>
     <p>A venda de bebidas alcoólicas é proibida para menores de 18 anos.</p>
     <button class="btn btn-ouro" id="sou-maior">Sim, tenho 18 anos ou mais</button>
@@ -254,7 +257,7 @@ aside.carrinho.aberto{transform:none}
 <header class="topo">
   <div class="wrap">
     <a class="marca" href="#inicio" aria-label="Malbê Vinhos, início">
-      <img src="img/selo.png" alt="">
+      <img src="img/marca/icone.svg" alt="">
       <span>MALBÊ<small>Vinhos selecionados</small></span>
     </a>
     <label class="busca">

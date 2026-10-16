@@ -15,7 +15,7 @@ const LOJA = {
 let VINHOS = [];
 /* ============================================ */
 
-const fotoDe = v => v.foto || "img/selo.png";
+const fotoDe = v => v.foto || "img/marca/selo.svg";
 const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const $ = s => document.querySelector(s);

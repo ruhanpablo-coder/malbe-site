@@ -139,7 +139,7 @@ function abrirEditor(id, v, precoMistral){
 function preview(){
   const img = $("#f-preview"); img.classList.remove("quadrada");
   img.onload = function(){ if(this.naturalWidth/this.naturalHeight > .8) this.classList.add("quadrada"); };
-  img.src = $("#f-foto").value || "img/selo.png";
+  img.src = $("#f-foto").value || "img/marca/selo.svg";
 }
 $("#f-foto").addEventListener("change", preview);
 function contarDesc(){ $("#f-desc-cont").textContent = `${$("#f-desc").value.length} de 280 caracteres`; }
@@ -184,7 +184,7 @@ function desenharLista(){
   $("#resumo").textContent = `${produtos.length} vinhos cadastrados, ${ativos} aparecendo no site, ${disp} disponíveis para compra. "No site" desligado esconde o vinho; "Disponível" desligado mostra esmaecido.`;
   $("#lista").innerHTML = produtos.map(p => `
     <tr class="${p.ativo === false ? "inativo" : ""}" data-id="${esc(p.id)}">
-      <td><div class="mini"><img src="${esc(p.foto || "img/selo.png")}" alt=""></div></td>
+      <td><div class="mini"><img src="${esc(p.foto || "img/marca/selo.svg")}" alt=""></div></td>
       <td class="nome"><b>${esc(p.nome)}</b><small>${esc(p.vinicola)}</small></td>
       <td class="col-tipo">${esc(p.tipo)}</td>
       <td><input type="text" inputmode="decimal" value="${Number.isFinite(p.preco) ? p.preco.toFixed(2).replace(".", ",") : ""}" placeholder="Consulta" data-campo="preco" aria-label="Preço de ${esc(p.nome)}"></td>
