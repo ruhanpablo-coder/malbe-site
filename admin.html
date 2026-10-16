@@ -34,7 +34,7 @@ h2{font-family:var(--serif);font-weight:500;font-size:21px;margin:0 0 4px}
 .sub{color:var(--cinza);margin:0 0 18px}
 .cartao{background:var(--branco);border:1px solid var(--linha);border-radius:10px;padding:20px;margin-bottom:22px}
 label{display:block;font-size:13px;color:var(--cinza);margin-bottom:4px}
-input[type=text],input[type=password],input[type=url],select{width:100%;border:1px solid var(--linha);border-radius:6px;padding:9px 11px;background:#fffdf9;color:var(--tinta)}
+input[type=text],input[type=password],input[type=url],select,textarea{width:100%;border:1px solid var(--linha);border-radius:6px;padding:9px 11px;background:#fffdf9;color:var(--tinta)}
 .btn{border:0;border-radius:6px;padding:10px 16px;font-weight:600;font-size:14px}
 .btn-pri{background:var(--bordo);color:var(--papel)}
 .btn-pri:hover{background:var(--bordo-escuro)}
@@ -69,6 +69,7 @@ input[type=text],input[type=password],input[type=url],select{width:100%;border:1
 .campos > div{grid-column:span 3}
 .campos .c2{grid-column:span 2}
 .campos .c6{grid-column:span 6}
+textarea{font:inherit;resize:vertical;line-height:1.5}
 .check{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--tinta)}
 .acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .ref{font-size:12.5px;color:var(--cinza);margin-top:4px}
@@ -170,6 +171,7 @@ tr.inativo td.acao,tr.inativo td.ativo{opacity:1}
             <div class="c2"><label for="f-preco">Preço da garrafa (R$)</label><input type="text" inputmode="decimal" id="f-preco" placeholder="Vazio = sob consulta"><p class="ref" id="f-ref"></p></div>
             <div class="c2"><label for="f-caixa">Garrafas por caixa</label>
               <select id="f-caixa"><option>6</option><option>4</option><option>3</option><option>12</option><option>1</option></select></div>
+            <div class="c6"><label for="f-desc">Descrição curta (aparece no card, até 280 caracteres)</label><textarea id="f-desc" rows="3" maxlength="280" placeholder="Ex.: Malbec do Vale de Uco, com ameixa madura e taninos macios."></textarea><p class="ref" id="f-desc-cont"></p></div>
             <div class="c6"><label for="f-foto">Foto (endereço da imagem)</label><input type="url" id="f-foto"></div>
             <div class="c6"><label class="check"><input type="checkbox" id="f-ativo" checked> Mostrar no site</label></div>
             <div class="c6"><label class="check"><input type="checkbox" id="f-disponivel" checked> Disponível para compra (desmarcado aparece esmaecido como "Indisponível")</label></div>
@@ -323,6 +325,7 @@ function abrirEditor(id, v, precoMistral){
   $("#f-preco").value = v.preco == null ? "" : v.preco.toFixed(2).replace(".", ",");
   $("#f-caixa").value = String(v.caixa || 6);
   $("#f-foto").value = v.foto || "";
+  $("#f-desc").value = v.descricao || ""; contarDesc();
   $("#f-ativo").checked = v.ativo !== false;
   $("#f-disponivel").checked = v.disponivel !== false;
   $("#f-ref").textContent = precoMistral ? `Na Mistral: ${brl(precoMistral)}` : "";
@@ -337,6 +340,8 @@ function preview(){
   img.src = $("#f-foto").value || "img/selo.png";
 }
 $("#f-foto").addEventListener("change", preview);
+function contarDesc(){ $("#f-desc-cont").textContent = `${$("#f-desc").value.length} de 280 caracteres`; }
+$("#f-desc").addEventListener("input", contarDesc);
 $("#f-cancelar").addEventListener("click", () => { $("#editor").hidden = true; editando = null; });
 
 /* aceita "89,90", "89.90" e "1.299,90"; vazio vira null (sob consulta); inválido vira NaN */
@@ -355,7 +360,7 @@ $("#f-salvar").addEventListener("click", () => {
   if(Number.isNaN(preco)){ alert("O preço precisa ser maior que zero, ou ficar vazio para sob consulta."); return; }
   const dados = {
     nome, vinicola: $("#f-vinicola").value.trim(), uva: $("#f-uva").value.trim(), tipo: $("#f-tipo").value,
-    preco, caixa: parseInt($("#f-caixa").value, 10), foto: $("#f-foto").value.trim(), ativo: $("#f-ativo").checked, disponivel: $("#f-disponivel").checked,
+    preco, caixa: parseInt($("#f-caixa").value, 10), foto: $("#f-foto").value.trim(), descricao: $("#f-desc").value.trim(), ativo: $("#f-ativo").checked, disponivel: $("#f-disponivel").checked,
   };
   const mistral = $("#editor").dataset.mistral; if(mistral) dados.mistral_id = Number(mistral);
   if(editando){

@@ -118,6 +118,8 @@ h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,3.4vw,38px);lin
 .produto .vinicola{font-size:13.5px;color:var(--cinza)}
 .produto h3{font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.2;margin:0}
 .produto .uva{font-size:14px;color:var(--cinza)}
+.desc{font-size:13.5px;line-height:1.5;color:var(--cinza);margin:8px 0 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.desc.aberta{-webkit-line-clamp:unset;display:block}
 .precos{margin-top:auto;padding-top:12px}
 .preco{font-size:22px;font-weight:600;color:var(--bordo)}
 .preco-caixa{font-size:13.5px;color:var(--cinza)}
@@ -429,6 +431,7 @@ function desenharGrade(){
         <span class="vinicola">${esc(v.vinicola)}</span>
         <h3>${esc(v.nome)}</h3>
         <span class="uva">${esc(v.uva)}</span>
+        ${v.descricao ? `<p class="desc" title="Toque para ler tudo">${esc(v.descricao)}</p>` : ""}
         <div class="precos">
           <div class="preco">${v.preco ? brl(v.preco) : "Preço sob consulta"}</div>
           <div class="preco-caixa">${v.preco ? `Caixa com ${v.caixa||6}: ${brl(v.preco*(v.caixa||6))}` : `Caixa com ${v.caixa||6} garrafas`}</div>
@@ -439,6 +442,7 @@ function desenharGrade(){
   }).join("") : `<div class="vazio">Nenhum vinho encontrado para essa busca. Tente o nome da uva ou da vinícola.</div>`;
 }
 $("#busca").addEventListener("input", () => { desenharGrade(); if($("#busca").value) $("#vinhos").scrollIntoView({block:"start"}); });
+$("#grade").addEventListener("click", e => { const d = e.target.closest(".desc"); if(d){ d.classList.toggle("aberta"); return; } });
 $("#grade").addEventListener("click", e => { const b = e.target.closest(".add"); if(b){ mudar(b.dataset.id, 1); abrir(); } });
 
 /* carrinho */
@@ -483,10 +487,26 @@ $("#enviar").addEventListener("click", () => {
   const nome = $("#nome").value.trim();
   guardar("malbe-nome", nome);
   const ids = Object.keys(carrinho).filter(comprar);
-  const linhas = ids.map(id => { const v = VINHOS.find(x=>x.id===id); return `• ${carrinho[id]}x ${v.nome}${v.preco ? ` (${brl(v.preco*carrinho[id])})` : ""}`; });
+  const linhas = ids.map(id => {
+    const v = VINHOS.find(x=>x.id===id), q = carrinho[id];
+    return `▫️ ${q}x ${v.nome}${v.preco ? `\n      ${brl(v.preco)} cada · subtotal ${brl(v.preco*q)}` : `\n      preço sob consulta`}`;
+  });
   const total = totalPedido(ids);
-  const fecho = total === null ? "Podem me passar os valores e confirmar o estoque e a entrega?" : `Total: ${brl(total)}\n\nPodem confirmar o estoque e a entrega?`;
-  const msg = `Olá, Malbê! ${nome ? "Sou "+nome+". " : ""}Quero fazer este pedido:\n\n${linhas.join("\n")}\n\n${fecho}`;
+  const garrafas = ids.reduce((s,id) => s + carrinho[id], 0);
+  const msg = [
+    `🍷 *Novo pedido · Malbê Vinhos*`,
+    ``,
+    `Olá, Malbê! 👋${nome ? ` Sou *${nome}*.` : ""}`,
+    `Quero fazer este pedido:`,
+    ``,
+    `🛒 *Itens*`,
+    ...linhas,
+    ``,
+    `📦 ${garrafas} ${garrafas === 1 ? "garrafa" : "garrafas"}`,
+    total === null ? `💰 *Total:* a confirmar (há item sob consulta)` : `💰 *Total: ${brl(total)}*`,
+    ``,
+    `✅ Podem confirmar o estoque, a forma de pagamento e a entrega?`,
+  ].join("\n");
   window.open(waLink(msg), "_blank", "noopener");
 });
 

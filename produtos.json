@@ -10,7 +10,8 @@
    "caixa": 6,
    "foto": "img/malbec-argentino.png",
    "ativo": true,
-   "disponivel": false
+   "disponivel": false,
+   "descricao": "O Malbec mais emblemático da família Catena, feito com vinhas velhas dos vinhedos Nicasia e Angélica. Amadurece de 15 a 18 meses em grandes tonéis de carvalho e tanques de concreto."
   },
   {
    "id": "angelica-malbec",
@@ -22,7 +23,8 @@
    "caixa": 4,
    "foto": "img/angelica-malbec.png",
    "ativo": true,
-   "disponivel": true
+   "disponivel": true,
+   "descricao": "Homenagem à matriarca da família Catena. Uvas do Vale de Uco, de vinhedo de altitude com solo pedregoso, que dão um Malbec concentrado e de taninos aveludados."
   },
   {
    "id": "angelica-chardonnay",
@@ -34,7 +36,8 @@
    "caixa": 4,
    "foto": "img/angelica-chardonnay.png",
    "ativo": true,
-   "disponivel": false
+   "disponivel": false,
+   "descricao": "Chardonnay de vinhedo único aos pés do Cordón del Plata. Cítricos e mineralidade no nariz; na boca é untuoso, com fruta madura, toque de baunilha e acidez fresca."
   },
   {
    "id": "el-enemigo",
@@ -46,7 +49,8 @@
    "caixa": 6,
    "foto": "img/el-enemigo.png",
    "ativo": true,
-   "disponivel": false
+   "disponivel": false,
+   "descricao": "Corte de 90% Malbec e 10% Cabernet Franc de Gualtallary, a 1.470 m de altitude, assinado por Alejandro Vigil. Passa 15 meses entre tonéis, barricas e concreto: elegante e mineral."
   },
   {
    "id": "rutini",
@@ -58,7 +62,8 @@
    "caixa": 6,
    "foto": "img/rutini.jpg",
    "ativo": true,
-   "disponivel": true
+   "disponivel": true,
+   "descricao": "Meio a meio de Cabernet Sauvignon e Malbec do Vale de Uco, com 12 meses em carvalho francês. Ameixa e cereja do Malbec, pimenta e azeitona preta do Cabernet e um leve defumado."
   },
   {
    "id": "saint-felicien",
@@ -70,7 +75,8 @@
    "caixa": 6,
    "foto": "img/saint-felicien.png",
    "ativo": true,
-   "disponivel": false
+   "disponivel": false,
+   "descricao": "Malbec elegante de cor violeta profunda, com amora madura, baunilha e tabaco. Entrada macia, taninos redondos do vinhedo Angélica e final longo."
   },
   {
    "id": "dv-cabernet-malbec",
@@ -82,7 +88,8 @@
    "caixa": 6,
    "foto": "img/dv-cabernet-malbec.png",
    "ativo": true,
-   "disponivel": true
+   "disponivel": true,
+   "descricao": "Cabernet do vinhedo La Pirámide com Malbec do Angélica, em Lunlunta. Especiarias, amora e notas de baunilha e tabaco da barrica; vai muito bem com carnes."
   },
   {
    "id": "dv-malbec-malbec",
@@ -94,7 +101,8 @@
    "caixa": 6,
    "foto": "img/dv-malbec-malbec.png",
    "ativo": true,
-   "disponivel": true
+   "disponivel": true,
+   "descricao": "Dois Malbecs em um: o vinhedo Angélica traz ameixa madura e maciez; o La Pirámide, frutas negras com pimenta-do-reino e cravo. Final longo e aveludado."
   },
   {
    "id": "dv-nature",
@@ -106,7 +114,8 @@
    "caixa": 6,
    "foto": "img/dv-nature.png",
    "ativo": true,
-   "disponivel": false
+   "disponivel": false,
+   "descricao": "Espumante de 70% Chardonnay e 30% Pinot Noir de Tupungato, a 1.500 m. Flores brancas e cítricos, notas de pão fresco e final cremoso."
   }
  ]
 }
