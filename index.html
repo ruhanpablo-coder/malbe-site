@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Malbê Vinhos Selecionados</title>
+<meta name="description" content="Vinhos argentinos selecionados pela Malbê. Escolha os rótulos e faça o pedido pelo WhatsApp.">
+<link rel="icon" href="img/selo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bordo:#5c0d1d;      /* fundo do selo */
+  --bordo-escuro:#3a0712;
+  --ouro:#b98a3e;       /* moldura do selo */
+  --ouro-claro:#e7cf9c;
+  --papel:#f5eee2;      /* miolo do selo */
+  --tinta:#2b1a1d;
+  --cinza:#6f5f61;
+  --linha:#e2d6c4;
+  --branco:#ffffff;
+  --verde-wa:#1f8f4e;
+  --serif:"Marcellus", Georgia, serif;
+  --sans:"Instrument Sans", system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--papel);color:var(--tinta);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--ouro);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* faixa de aviso */
+.aviso{background:var(--bordo-escuro);color:var(--ouro-claro);font-size:13.5px;text-align:center;padding:8px 16px}
+
+/* cabeçalho */
+header.topo{background:var(--bordo);color:var(--papel);position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.topo > .wrap{display:flex;align-items:center;gap:20px;min-height:76px}
+.marca{display:flex;align-items:center;gap:12px;text-decoration:none}
+.marca img,.sobre img,.idade img{border-radius:50%}
+.marca img{width:54px;height:54px}
+.marca span{font-family:var(--serif);font-size:26px;letter-spacing:.06em;line-height:1}
+.marca small{display:block;font-family:var(--sans);font-size:12px;letter-spacing:.04em;color:var(--ouro-claro);margin-top:4px}
+.busca{flex:1;max-width:460px;margin-left:auto;position:relative}
+.busca input{width:100%;border:0;border-radius:6px;padding:11px 14px 11px 40px;font:inherit;font-size:15px;color:var(--tinta);background:var(--papel)}
+.busca svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--cinza)}
+.btn-carrinho{display:flex;align-items:center;gap:8px;background:none;border:1px solid rgba(231,207,156,.5);color:var(--papel);border-radius:6px;padding:9px 14px}
+.btn-carrinho:hover{border-color:var(--ouro-claro)}
+.btn-carrinho svg{width:20px;height:20px}
+.contador{background:var(--ouro);color:var(--bordo-escuro);font-weight:600;font-size:12.5px;min-width:22px;height:22px;border-radius:11px;display:inline-grid;place-items:center;padding:0 6px}
+nav.menu{border-top:1px solid rgba(231,207,156,.18)}
+nav.menu .wrap{display:flex;gap:28px;min-height:44px;align-items:center;overflow-x:auto;scrollbar-width:none}
+nav.menu a{text-decoration:none;font-size:15px;white-space:nowrap;color:var(--papel);opacity:.88}
+nav.menu a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px;text-decoration-color:var(--ouro)}
+
+/* abertura: a prateleira do lote */
+.abertura{background:var(--bordo);color:var(--papel);overflow:hidden}
+.abertura .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:40px;align-items:end;padding-top:56px}
+.abertura h1{font-family:var(--serif);font-weight:400;font-size:clamp(36px,5vw,60px);line-height:1.08;margin:0 0 20px;max-width:13ch}
+.abertura p{font-size:17.5px;max-width:44ch;margin:0 0 28px;color:#ecdccb}
+.abertura .acoes{display:flex;gap:12px;flex-wrap:wrap;padding-bottom:56px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:6px;padding:13px 22px;font-weight:600;font-size:15.5px;text-decoration:none;border:1px solid transparent}
+.btn-ouro{background:var(--ouro);color:var(--bordo-escuro)}
+.btn-ouro:hover{background:var(--ouro-claro)}
+.btn-linha{border-color:rgba(231,207,156,.55);color:var(--papel)}
+.btn-linha:hover{border-color:var(--ouro-claro)}
+.prateleira{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:0;padding:0 8px}
+.prateleira::after{content:"";position:absolute;left:0;right:0;bottom:0;height:18px;background:linear-gradient(#8a5a2b,#5d3a1a);border-top:2px solid var(--ouro);border-radius:2px 2px 0 0}
+.prateleira img{height:300px;width:auto;margin:0 -16px;mix-blend-mode:multiply;filter:saturate(1.05)}
+.prateleira .garrafa{background:var(--papel);border-radius:999px 999px 0 0;padding:18px 10px 18px;margin:0 4px;position:relative;z-index:1}
+.prateleira .garrafa:nth-child(2n){padding-top:34px}
+.prateleira .garrafa img{height:250px;margin:0}
+
+/* vantagens */
+.vantagens{background:var(--branco);border-bottom:1px solid var(--linha)}
+.vantagens .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding-top:26px;padding-bottom:26px}
+.vantagem{display:flex;gap:14px;align-items:flex-start}
+.vantagem svg{flex:none;width:30px;height:30px;color:var(--bordo)}
+.vantagem strong{display:block;font-size:15.5px}
+.vantagem span{font-size:14px;color:var(--cinza)}
+
+/* vitrine */
+section.bloco{padding:64px 0;scroll-margin-top:120px}
+.cabeca-bloco{display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,38px);line-height:1.15;margin:0}
+.cabeca-bloco p{margin:6px 0 0;color:var(--cinza)}
+.filtros{display:flex;gap:8px;flex-wrap:wrap}
+.filtro{border:1px solid var(--linha);background:var(--branco);color:var(--tinta);border-radius:999px;padding:7px 16px;font-size:14.5px}
+.filtro[aria-pressed="true"]{background:var(--bordo);border-color:var(--bordo);color:var(--papel)}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
+.produto{background:var(--branco);border:1px solid var(--linha);border-radius:8px;display:flex;flex-direction:column;overflow:hidden}
+.produto .foto{aspect-ratio:4/5;background:var(--branco);position:relative;overflow:hidden}
+.produto .foto img{position:absolute;inset:18px;width:calc(100% - 36px);height:calc(100% - 36px);object-fit:contain}
+.produto .foto img.sem-foto{inset:30%;width:40%;height:40%;border-radius:50%;opacity:.85}
+.selo-tipo{z-index:1;position:absolute;top:12px;left:12px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:4px;background:var(--papel);color:var(--bordo)}
+.produto .info{padding:16px 18px 18px;border-top:1px solid var(--linha);display:flex;flex-direction:column;gap:4px;flex:1}
+.produto .vinicola{font-size:13.5px;color:var(--cinza)}
+.produto h3{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.2;margin:0}
+.produto .uva{font-size:14px;color:var(--cinza)}
+.precos{margin-top:auto;padding-top:12px}
+.preco{font-size:22px;font-weight:600;color:var(--bordo)}
+.preco-caixa{font-size:13.5px;color:var(--cinza)}
+.add{margin-top:12px;width:100%;background:var(--bordo);color:var(--papel);border:0;border-radius:6px;padding:11px;font-weight:600}
+.add:hover{background:var(--bordo-escuro)}
+.add.no-carrinho{background:var(--papel);color:var(--bordo);border:1px solid var(--bordo)}
+.vazio{grid-column:1/-1;padding:40px;text-align:center;color:var(--cinza);background:var(--branco);border:1px dashed var(--linha);border-radius:8px}
+
+/* como pedir */
+.como{background:var(--branco);border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.passos{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;counter-reset:p}
+.passos li{counter-increment:p;padding-top:18px;border-top:2px solid var(--ouro)}
+.passos li::before{content:counter(p);font-family:var(--serif);font-size:34px;color:var(--bordo);line-height:1;display:block;margin-bottom:10px}
+.passos strong{display:block;font-size:17px;margin-bottom:4px}
+.passos span{color:var(--cinza)}
+
+/* sobre */
+.sobre .wrap{display:grid;grid-template-columns:200px 1fr;gap:48px;align-items:center}
+.sobre img{width:200px;height:200px}
+.sobre p{max-width:62ch;font-size:17px;margin:14px 0 0}
+
+/* rodapé */
+footer{background:var(--bordo-escuro);color:#e6d6c6;font-size:14.5px}
+footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;padding-top:48px;padding-bottom:32px}
+footer h4{font-family:var(--serif);font-weight:400;font-size:19px;color:var(--papel);margin:0 0 12px}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+footer a{text-decoration:none}
+footer a:hover{text-decoration:underline}
+.legal{border-top:1px solid rgba(231,207,156,.15);padding:18px 0;font-size:13px;color:#bfa9a0}
+.legal .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:0;padding-bottom:0}
+
+/* botão flutuante */
+.wa-flutuante{position:fixed;right:20px;bottom:20px;z-index:30;width:56px;height:56px;border-radius:50%;background:var(--verde-wa);color:#fff;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.wa-flutuante svg{width:30px;height:30px}
+
+/* carrinho */
+.fundo{position:fixed;inset:0;background:rgba(43,26,29,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.fundo.aberto{opacity:1;pointer-events:auto}
+aside.carrinho{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--papel);z-index:50;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease}
+aside.carrinho.aberto{transform:none}
+.carrinho header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--linha);background:var(--branco)}
+.carrinho h2{font-size:26px}
+.fechar{background:none;border:0;font-size:28px;line-height:1;color:var(--cinza);padding:4px 8px}
+.itens{flex:1;overflow:auto;padding:8px 20px}
+.item{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--linha)}
+.item img{width:56px;height:70px;object-fit:contain;background:var(--branco);border-radius:4px}
+.item strong{display:block;font-size:15px;line-height:1.25}
+.item small{color:var(--cinza)}
+.qtd{display:flex;align-items:center;border:1px solid var(--linha);border-radius:6px;background:var(--branco)}
+.qtd button{background:none;border:0;width:32px;height:32px;font-size:18px;color:var(--bordo)}
+.qtd span{min-width:24px;text-align:center;font-weight:600}
+.carrinho-vazio{padding:40px 0;text-align:center;color:var(--cinza)}
+.carrinho footer{background:var(--branco);color:var(--tinta);border-top:1px solid var(--linha);padding:18px 20px;font-size:15px}
+.total{display:flex;justify-content:space-between;font-size:18px;font-weight:600;margin-bottom:12px}
+.carrinho label{display:block;font-size:14px;color:var(--cinza);margin-bottom:4px}
+.carrinho input{width:100%;border:1px solid var(--linha);border-radius:6px;padding:10px 12px;font:inherit;margin-bottom:12px;background:var(--papel)}
+.enviar{width:100%;background:var(--verde-wa);color:#fff;border:0;border-radius:6px;padding:14px;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.enviar:disabled{opacity:.45;cursor:not-allowed}
+.enviar svg{width:20px;height:20px}
+.obs{font-size:13px;color:var(--cinza);margin:10px 0 0}
+
+/* idade */
+.idade{position:fixed;inset:0;z-index:60;background:rgba(58,7,18,.92);display:grid;place-items:center;padding:20px}
+.idade[hidden]{display:none}
+.idade div{background:var(--papel);border-radius:10px;max-width:400px;padding:32px 28px;text-align:center}
+.idade img{width:96px;height:96px;margin:0 auto 14px}
+.idade h2{font-size:26px;margin-bottom:8px}
+.idade p{color:var(--cinza);margin:0 0 20px}
+.idade .btn{width:100%}
+.idade .sair{display:block;margin-top:12px;font-size:14px;color:var(--cinza)}
+
+@media (max-width:900px){
+  .abertura .wrap{grid-template-columns:1fr;padding-top:40px;gap:8px}
+  .abertura .acoes{padding-bottom:28px}
+  .prateleira .garrafa img{height:180px}
+  .vantagens .wrap,.passos{grid-template-columns:1fr;gap:18px}
+  .sobre .wrap{grid-template-columns:1fr;gap:20px}
+  .sobre img{width:140px;height:140px}
+  footer .wrap{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .topo > .wrap{flex-wrap:wrap;gap:10px 12px;padding-top:10px;padding-bottom:10px}
+  .marca img{width:44px;height:44px}
+  .marca span{font-size:22px}
+  .busca{order:3;flex-basis:100%;max-width:none}
+  .btn-carrinho{margin-left:auto}
+  .btn-carrinho .rotulo{display:none}
+  .prateleira .garrafa{padding:12px 4px;margin:0 2px}
+  .prateleira .garrafa:nth-child(2n){padding-top:22px}
+  .prateleira .garrafa img{height:120px}
+  .grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .produto .info{padding:12px}
+  .produto h3{font-size:17px}
+  .preco{font-size:19px}
+  section.bloco{padding:44px 0}
+}
+</style>
+</head>
+<body>
+
+<div class="idade" id="idade" hidden role="dialog" aria-modal="true" aria-labelledby="idade-titulo">
+  <div>
+    <img src="img/selo.png" alt="">
+    <h2 id="idade-titulo">Você tem 18 anos ou mais?</h2>
+    <p>A venda de bebidas alcoólicas é proibida para menores de 18 anos.</p>
+    <button class="btn btn-ouro" id="sou-maior">Sim, tenho 18 anos ou mais</button>
+    <a class="sair" href="https://www.google.com">Não, sair do site</a>
+  </div>
+</div>
+
+<div class="aviso" id="aviso"></div>
+
+<header class="topo">
+  <div class="wrap">
+    <a class="marca" href="#inicio" aria-label="Malbê Vinhos, início">
+      <img src="img/selo.png" alt="">
+      <span>MALBÊ<small>Vinhos selecionados</small></span>
+    </a>
+    <label class="busca">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" id="busca" placeholder="Buscar vinho, uva ou vinícola" aria-label="Buscar vinho">
+    </label>
+    <button class="btn-carrinho" id="abrir-carrinho" aria-label="Abrir carrinho">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.2"/><circle cx="9.5" cy="20" r="1.3"/><circle cx="17.5" cy="20" r="1.3"/></svg>
+      <span class="rotulo">Carrinho</span>
+      <span class="contador" id="contador">0</span>
+    </button>
+  </div>
+  <nav class="menu" aria-label="Seções">
+    <div class="wrap">
+      <a href="#vinhos" data-filtro="todos">Todos os vinhos</a>
+      <a href="#vinhos" data-filtro="Tinto">Tintos</a>
+      <a href="#vinhos" data-filtro="Branco">Brancos</a>
+      <a href="#vinhos" data-filtro="Espumante">Espumantes</a>
+      <a href="#como-pedir">Como pedir</a>
+      <a href="#sobre">Sobre nós</a>
+    </div>
+  </nav>
+</header>
+
+<main id="inicio">
+  <section class="abertura">
+    <div class="wrap">
+      <div>
+        <h1>Vinhos argentinos escolhidos garrafa por garrafa</h1>
+        <p>Trazemos cada lote direto da fronteira com a Argentina: Catena Zapata, Rutini, El Enemigo e outros rótulos que a gente prova antes de vender.</p>
+        <div class="acoes">
+          <a class="btn btn-ouro" href="#vinhos">Ver os vinhos</a>
+          <a class="btn btn-linha" id="wa-abertura" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </div>
+      </div>
+      <div class="prateleira" id="prateleira" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="vantagens" aria-label="Como funciona a compra">
+    <div class="wrap" id="vantagens"></div>
+  </section>
+
+  <section class="bloco" id="vinhos">
+    <div class="wrap">
+      <div class="cabeca-bloco">
+        <div>
+          <h2>Nossos vinhos</h2>
+          <p id="sub-lote"></p>
+        </div>
+        <div class="filtros" role="group" aria-label="Filtrar por tipo" id="filtros"></div>
+      </div>
+      <div class="grade" id="grade"></div>
+    </div>
+  </section>
+
+  <section class="bloco como" id="como-pedir">
+    <div class="wrap">
+      <h2>Como pedir</h2>
+      <ol class="passos">
+        <li><strong>Escolha os vinhos</strong><span>Adicione as garrafas ao carrinho. Dá pra levar a caixa fechada também.</span></li>
+        <li><strong>Envie pelo WhatsApp</strong><span>O carrinho vira uma mensagem pronta com os vinhos escolhidos. É só enviar.</span></li>
+        <li><strong>Receba o orçamento</strong><span>A gente responde com os valores, confirma o estoque e combina a entrega e o pagamento.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="bloco sobre" id="sobre">
+    <div class="wrap">
+      <img src="img/selo.png" alt="Selo da Malbê Vinhos Selecionados">
+      <div>
+        <h2>Sobre a Malbê</h2>
+        <p>A Malbê é do Ruhan e da Isabele. A gente compra em pequenos lotes do outro lado da fronteira, escolhe rótulos que gosta de beber e traz poucas caixas de cada. Por isso o estoque muda a cada viagem: quando um vinho acaba, pode demorar até voltar.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <h4>Malbê Vinhos Selecionados</h4>
+      <p id="rodape-cidade"></p>
+    </div>
+    <div>
+      <h4>Atendimento</h4>
+      <ul>
+        <li><a id="wa-rodape" href="#" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a id="ig-rodape" href="#" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Navegue</h4>
+      <ul>
+        <li><a href="#vinhos">Nossos vinhos</a></li>
+        <li><a href="#como-pedir">Como pedir</a></li>
+        <li><a href="#sobre">Sobre nós</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="legal">
+    <div class="wrap">
+      <span>Venda proibida para menores de 18 anos. Se beber, não dirija.</span>
+      <span>© <span id="ano"></span> Malbê Vinhos Selecionados</span>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-flutuante" id="wa-flutuante" href="#" target="_blank" rel="noopener" aria-label="Falar com a Malbê no WhatsApp">
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.6c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.2 1.3 3.4c.2.2 2.3 3.5 5.6 4.9 2.1.9 2.9 1 3.9.8.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4Z"/></svg>
+</a>
+
+<div class="fundo" id="fundo"></div>
+<aside class="carrinho" id="carrinho" aria-label="Carrinho" aria-hidden="true">
+  <header>
+    <h2>Seu pedido</h2>
+    <button class="fechar" id="fechar-carrinho" aria-label="Fechar carrinho">×</button>
+  </header>
+  <div class="itens" id="itens"></div>
+  <footer>
+    <div class="total"><span>Total</span><span id="total">Sob consulta</span></div>
+    <label for="nome">Seu nome</label>
+    <input id="nome" autocomplete="name" placeholder="Para a gente saber com quem fala">
+    <button class="enviar" id="enviar" disabled>
+      <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Z"/></svg>
+      Enviar pedido pelo WhatsApp
+    </button>
+    <p class="obs">O pedido só é confirmado depois que a gente responder com o estoque e a entrega.</p>
+  </footer>
+</aside>
+
+<script>
+/* ===== Configuração da loja: edite aqui ===== */
+const LOJA = {
+  whatsapp: "5518998154368",            // DDI + DDD + número, só dígitos
+  instagram: "https://instagram.com/",   // PROVISÓRIO: link do perfil
+  cidade: "Entregas combinadas pelo WhatsApp",
+  aviso: "Lote novo chegando em novembro. Peça pelo WhatsApp e reserve suas garrafas.",
+  lote: "Lote 02, novembro de 2026",
+  vantagens: [
+    ["Pedido pelo WhatsApp", "Monte o carrinho e envie a mensagem pronta.", "chat"],
+    ["Caixa fechada", "Leve 4 ou 6 garrafas do mesmo vinho.", "caixa"],
+    ["Poucas caixas por lote", "Estoque limitado a cada viagem.", "garrafa"],
+  ],
+};
+
+/* preco:null mostra "Preço sob consulta". Para mostrar o preço, troque null pelo valor (ex.: 169.90) */
+const VINHOS = [
+  {id:"malbec-argentino", nome:"Catena Zapata Malbec Argentino", vinicola:"Catena Zapata", uva:"Malbec · 2023", tipo:"Tinto", preco:499.90, caixa:6, foto:"img/malbec-argentino.jpg"},
+  {id:"angelica-malbec", nome:"Angélica Zapata Malbec Alta", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:259.90, caixa:4, foto:"img/angelica-malbec.png"},
+  {id:"angelica-chardonnay", nome:"Angélica Zapata Chardonnay Alta", vinicola:"Catena Zapata", uva:"Chardonnay", tipo:"Branco", preco:199.90, caixa:4, foto:"img/angelica-chardonnay.png"},
+  {id:"el-enemigo", nome:"El Enemigo Malbec", vinicola:"Aleanna", uva:"Malbec", tipo:"Tinto", preco:169.90, caixa:6, foto:"img/el-enemigo.jpg"},
+  {id:"rutini", nome:"Rutini Cabernet Malbec", vinicola:"Rutini Wines", uva:"Cabernet Sauvignon e Malbec", tipo:"Tinto", preco:139.90, caixa:6, foto:"img/rutini.jpg"},
+  {id:"saint-felicien", nome:"Saint Felicien Malbec", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:59.90, caixa:6, foto:"img/saint-felicien.jpg"},
+  {id:"dv-cabernet-malbec", nome:"D.V. Catena Cabernet Malbec", vinicola:"Catena Zapata", uva:"Cabernet Sauvignon e Malbec", tipo:"Tinto", preco:99.90, caixa:6, foto:"img/dv-cabernet-malbec.png"},
+  {id:"dv-malbec-malbec", nome:"D.V. Catena Malbec-Malbec", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:144.90, caixa:6, foto:"img/dv-malbec-malbec.png"},
+  {id:"dv-nature", nome:"D.V. Catena Nature", vinicola:"Catena Zapata", uva:"Espumante Nature", tipo:"Espumante", preco:239.90, caixa:6, foto:"img/dv-nature.jpg"},
+];
+/* ============================================ */
+
+const fotoDe = v => v.foto || "img/selo.png";
+const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const $ = s => document.querySelector(s);
+const waLink = txt => `https://wa.me/${LOJA.whatsapp}${txt ? "?text="+encodeURIComponent(txt) : ""}`;
+const guardar = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+const ler = (k,padrao) => { try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; }catch(e){ return padrao; } };
+
+const ICONES = {
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  caixa:'<path d="M3 8l9-4 9 4v9l-9 4-9-4z"/><path d="M3 8l9 4 9-4M12 12v9"/>',
+  garrafa:'<path d="M10 2h4v4l1.5 3v12a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V9L10 6z"/><path d="M8.5 13h7"/>',
+};
+
+let carrinho = ler("malbe-carrinho", {});
+let filtro = "todos";
+
+/* textos e links */
+$("#aviso").textContent = LOJA.aviso;
+$("#sub-lote").textContent = LOJA.lote + ". Estoque limitado.";
+$("#rodape-cidade").textContent = LOJA.cidade;
+$("#ano").textContent = new Date().getFullYear();
+const ola = "Olá, Malbê! Vim pelo site e queria saber sobre os vinhos.";
+["#wa-abertura","#wa-rodape","#wa-flutuante"].forEach(s => $(s).href = waLink(ola));
+$("#ig-rodape").href = LOJA.instagram;
+$("#vantagens").innerHTML = LOJA.vantagens.map(([t,d,i]) =>
+  `<div class="vantagem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">${ICONES[i]}</svg><div><strong>${t}</strong><span>${d}</span></div></div>`).join("");
+$("#prateleira").innerHTML = VINHOS.slice(0,5).map(v => `<div class="garrafa"><img src="${v.foto}" alt=""></div>`).join("");
+
+/* filtros */
+const tipos = ["todos", ...new Set(VINHOS.map(v => v.tipo))];
+const nomeFiltro = t => t === "todos" ? "Todos" : t + "s";
+function desenharFiltros(){
+  $("#filtros").innerHTML = tipos.map(t => `<button class="filtro" data-t="${t}" aria-pressed="${t===filtro}">${nomeFiltro(t)}</button>`).join("");
+}
+$("#filtros").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.t; desenharFiltros(); desenharGrade(); } });
+document.querySelectorAll("[data-filtro]").forEach(a => a.addEventListener("click", () => { filtro = a.dataset.filtro; desenharFiltros(); desenharGrade(); }));
+
+/* vitrine */
+const semAcento = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+function desenharGrade(){
+  const q = semAcento($("#busca").value.trim());
+  const lista = VINHOS.filter(v => (filtro==="todos" || v.tipo===filtro) && (!q || semAcento(`${v.nome} ${v.vinicola} ${v.uva} ${v.tipo}`).includes(q)));
+  $("#grade").innerHTML = lista.length ? lista.map(v => {
+    const qtd = carrinho[v.id] || 0;
+    return `<article class="produto">
+      <div class="foto"><span class="selo-tipo">${v.tipo}</span><img src="${fotoDe(v)}" alt="${v.foto ? "Garrafa de "+v.nome : "Foto em breve"}" loading="lazy" class="${v.foto?"":"sem-foto"}"></div>
+      <div class="info">
+        <span class="vinicola">${v.vinicola}</span>
+        <h3>${v.nome}</h3>
+        <span class="uva">${v.uva}</span>
+        <div class="precos">
+          <div class="preco">${v.preco ? brl(v.preco) : "Preço sob consulta"}</div>
+          <div class="preco-caixa">${v.preco ? `Caixa com ${v.caixa}: ${brl(v.preco*v.caixa)}` : `Caixa com ${v.caixa} garrafas`}</div>
+        </div>
+        <button class="add ${qtd?"no-carrinho":""}" data-id="${v.id}">${qtd ? `No carrinho (${qtd}). Adicionar mais` : "Adicionar ao carrinho"}</button>
+      </div>
+    </article>`;
+  }).join("") : `<div class="vazio">Nenhum vinho encontrado para essa busca. Tente o nome da uva ou da vinícola.</div>`;
+}
+$("#busca").addEventListener("input", () => { desenharGrade(); if($("#busca").value) $("#vinhos").scrollIntoView({block:"start"}); });
+$("#grade").addEventListener("click", e => { const b = e.target.closest(".add"); if(b){ mudar(b.dataset.id, 1); abrir(); } });
+
+/* carrinho */
+/* total só aparece se todos os vinhos do pedido tiverem preço */
+function totalPedido(ids){
+  const vs = ids.map(id => VINHOS.find(v => v.id===id)).filter(Boolean);
+  if(vs.some(v => !v.preco)) return null;
+  return vs.reduce((s,v) => s + v.preco*carrinho[v.id], 0);
+}
+function mudar(id, d){
+  carrinho[id] = Math.max(0, (carrinho[id]||0) + d);
+  if(!carrinho[id]) delete carrinho[id];
+  guardar("malbe-carrinho", carrinho);
+  desenharCarrinho(); desenharGrade();
+}
+function desenharCarrinho(){
+  const ids = Object.keys(carrinho).filter(id => VINHOS.some(v => v.id===id));
+  const total = totalPedido(ids);
+  const garrafas = ids.reduce((s,id) => s + carrinho[id], 0);
+  $("#contador").textContent = garrafas;
+  $("#total").textContent = total === null ? "Sob consulta" : brl(total);
+  $("#enviar").disabled = !ids.length;
+  $("#itens").innerHTML = ids.length ? ids.map(id => {
+    const v = VINHOS.find(x => x.id===id);
+    return `<div class="item"><img src="${fotoDe(v)}" alt=""><div><strong>${v.nome}</strong><small>${v.preco ? brl(v.preco)+" a garrafa" : "Preço sob consulta"}</small></div>
+      <div class="qtd"><button data-id="${id}" data-d="-1" aria-label="Tirar uma garrafa de ${v.nome}">−</button><span>${carrinho[id]}</span><button data-id="${id}" data-d="1" aria-label="Adicionar uma garrafa de ${v.nome}">+</button></div></div>`;
+  }).join("") : `<p class="carrinho-vazio">Seu carrinho está vazio. Escolha um vinho na vitrine para começar.</p>`;
+}
+$("#itens").addEventListener("click", e => { const b = e.target.closest("button[data-d]"); if(b) mudar(b.dataset.id, +b.dataset.d); });
+
+function abrir(){ $("#carrinho").classList.add("aberto"); $("#fundo").classList.add("aberto"); $("#carrinho").setAttribute("aria-hidden","false"); $("#fechar-carrinho").focus(); }
+function fechar(){ $("#carrinho").classList.remove("aberto"); $("#fundo").classList.remove("aberto"); $("#carrinho").setAttribute("aria-hidden","true"); }
+$("#abrir-carrinho").addEventListener("click", abrir);
+$("#fechar-carrinho").addEventListener("click", fechar);
+$("#fundo").addEventListener("click", fechar);
+document.addEventListener("keydown", e => { if(e.key==="Escape") fechar(); });
+
+$("#nome").value = ler("malbe-nome", "");
+$("#enviar").addEventListener("click", () => {
+  const nome = $("#nome").value.trim();
+  guardar("malbe-nome", nome);
+  const ids = Object.keys(carrinho);
+  const linhas = ids.map(id => { const v = VINHOS.find(x=>x.id===id); return `• ${carrinho[id]}x ${v.nome}${v.preco ? ` (${brl(v.preco*carrinho[id])})` : ""}`; });
+  const total = totalPedido(ids);
+  const fecho = total === null ? "Podem me passar os valores e confirmar o estoque e a entrega?" : `Total: ${brl(total)}\n\nPodem confirmar o estoque e a entrega?`;
+  const msg = `Olá, Malbê! ${nome ? "Sou "+nome+". " : ""}Quero fazer este pedido:\n\n${linhas.join("\n")}\n\n${fecho}`;
+  window.open(waLink(msg), "_blank", "noopener");
+});
+
+/* aviso de idade */
+if(!ler("malbe-maior", false)){ $("#idade").hidden = false; $("#sou-maior").focus(); }
+$("#sou-maior").addEventListener("click", () => { guardar("malbe-maior", true); $("#idade").hidden = true; });
+
+desenharFiltros(); desenharGrade(); desenharCarrinho();
+</script>
+</body>
+</html>
