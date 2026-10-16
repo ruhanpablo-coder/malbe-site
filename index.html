@@ -124,6 +124,10 @@ h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,3.4vw,38px);lin
 .add{margin-top:12px;width:100%;background:var(--bordo);color:var(--papel);border:0;border-radius:6px;padding:11px;font-weight:600}
 .add:hover{background:var(--bordo-escuro)}
 .add.no-carrinho{background:var(--papel);color:var(--bordo);border:1px solid var(--bordo)}
+.produto.indisponivel .foto img,.produto.indisponivel .info > :not(.add){opacity:.45}
+.produto.indisponivel .foto img{filter:grayscale(1)}
+.produto.indisponivel .selo-tipo{background:#ece6dc;color:var(--cinza)}
+.add:disabled{background:#e9e3d9;color:var(--cinza);cursor:not-allowed}
 .vazio{grid-column:1/-1;padding:40px;text-align:center;color:var(--cinza);background:var(--branco);border:1px dashed var(--linha);border-radius:8px}
 
 /* como pedir */
@@ -418,8 +422,9 @@ function desenharGrade(){
   const lista = VINHOS.filter(v => (filtro==="todos" || v.tipo===filtro) && (!q || semAcento(`${v.nome} ${v.vinicola} ${v.uva} ${v.tipo}`).includes(q)));
   $("#grade").innerHTML = lista.length ? lista.map(v => {
     const qtd = carrinho[v.id] || 0;
-    return `<article class="produto">
-      <div class="foto"><span class="selo-tipo">${esc(v.tipo)}</span><img src="${esc(fotoDe(v))}" alt="${v.foto ? "Garrafa de "+esc(v.nome) : "Foto em breve"}" loading="lazy" class="${v.foto?"":"sem-foto"}" onload="if(this.naturalWidth/this.naturalHeight>.8)this.classList.add('quadrada')"></div>
+    const tem = v.disponivel !== false;
+    return `<article class="produto${tem ? "" : " indisponivel"}">
+      <div class="foto"><span class="selo-tipo">${tem ? esc(v.tipo) : "Indisponível"}</span><img src="${esc(fotoDe(v))}" alt="${v.foto ? "Garrafa de "+esc(v.nome) : "Foto em breve"}" loading="lazy" class="${v.foto?"":"sem-foto"}" onload="if(this.naturalWidth/this.naturalHeight>.8)this.classList.add('quadrada')"></div>
       <div class="info">
         <span class="vinicola">${esc(v.vinicola)}</span>
         <h3>${esc(v.nome)}</h3>
@@ -428,7 +433,7 @@ function desenharGrade(){
           <div class="preco">${v.preco ? brl(v.preco) : "Preço sob consulta"}</div>
           <div class="preco-caixa">${v.preco ? `Caixa com ${v.caixa||6}: ${brl(v.preco*(v.caixa||6))}` : `Caixa com ${v.caixa||6} garrafas`}</div>
         </div>
-        <button class="add ${qtd?"no-carrinho":""}" data-id="${esc(v.id)}">${qtd ? `No carrinho (${qtd}). Adicionar mais` : "Adicionar ao carrinho"}</button>
+        ${tem ? `<button class="add ${qtd?"no-carrinho":""}" data-id="${esc(v.id)}">${qtd ? `No carrinho (${qtd}). Adicionar mais` : "Adicionar ao carrinho"}</button>` : `<button class="add" disabled>Indisponível no momento</button>`}
       </div>
     </article>`;
   }).join("") : `<div class="vazio">Nenhum vinho encontrado para essa busca. Tente o nome da uva ou da vinícola.</div>`;
@@ -438,19 +443,21 @@ $("#grade").addEventListener("click", e => { const b = e.target.closest(".add");
 
 /* carrinho */
 /* total só aparece se todos os vinhos do pedido tiverem preço */
+const comprar = id => VINHOS.some(v => v.id===id && v.disponivel !== false);
 function totalPedido(ids){
   const vs = ids.map(id => VINHOS.find(v => v.id===id)).filter(Boolean);
   if(vs.some(v => !v.preco)) return null;
   return vs.reduce((s,v) => s + v.preco*carrinho[v.id], 0);
 }
 function mudar(id, d){
+  if(!comprar(id) && d > 0) return;
   carrinho[id] = Math.max(0, (carrinho[id]||0) + d);
   if(!carrinho[id]) delete carrinho[id];
   guardar("malbe-carrinho", carrinho);
   desenharCarrinho(); desenharGrade();
 }
 function desenharCarrinho(){
-  const ids = Object.keys(carrinho).filter(id => VINHOS.some(v => v.id===id));
+  const ids = Object.keys(carrinho).filter(comprar);
   const total = totalPedido(ids);
   const garrafas = ids.reduce((s,id) => s + carrinho[id], 0);
   $("#contador").textContent = garrafas;
@@ -475,7 +482,7 @@ $("#nome").value = ler("malbe-nome", "");
 $("#enviar").addEventListener("click", () => {
   const nome = $("#nome").value.trim();
   guardar("malbe-nome", nome);
-  const ids = Object.keys(carrinho).filter(id => VINHOS.some(v => v.id===id));
+  const ids = Object.keys(carrinho).filter(comprar);
   const linhas = ids.map(id => { const v = VINHOS.find(x=>x.id===id); return `• ${carrinho[id]}x ${v.nome}${v.preco ? ` (${brl(v.preco*carrinho[id])})` : ""}`; });
   const total = totalPedido(ids);
   const fecho = total === null ? "Podem me passar os valores e confirmar o estoque e a entrega?" : `Total: ${brl(total)}\n\nPodem confirmar o estoque e a entrega?`;
@@ -492,6 +499,7 @@ fetch("produtos.json?v=" + Date.now())
   .then(r => { if(!r.ok) throw new Error(r.status); return r.json(); })
   .then(d => {
     VINHOS = (d.produtos || []).filter(v => v.ativo !== false);
+    VINHOS.sort((a, b) => (b.disponivel !== false) - (a.disponivel !== false));
     tipos = ["todos", ...new Set(VINHOS.map(v => v.tipo))];
     desenharFiltros(); desenharGrade(); desenharCarrinho();
   })

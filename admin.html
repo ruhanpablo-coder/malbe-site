@@ -172,6 +172,7 @@ tr.inativo td.acao,tr.inativo td.ativo{opacity:1}
               <select id="f-caixa"><option>6</option><option>4</option><option>3</option><option>12</option><option>1</option></select></div>
             <div class="c6"><label for="f-foto">Foto (endereço da imagem)</label><input type="url" id="f-foto"></div>
             <div class="c6"><label class="check"><input type="checkbox" id="f-ativo" checked> Mostrar no site</label></div>
+            <div class="c6"><label class="check"><input type="checkbox" id="f-disponivel" checked> Disponível para compra (desmarcado aparece esmaecido como "Indisponível")</label></div>
           </div>
           <div class="acoes">
             <button class="btn btn-pri" id="f-salvar">Guardar na lista</button>
@@ -185,7 +186,7 @@ tr.inativo td.acao,tr.inativo td.ativo{opacity:1}
       <h2>Vinhos cadastrados</h2>
       <p class="ref" id="resumo"></p>
       <table>
-        <thead><tr><th></th><th>Vinho</th><th class="col-tipo">Tipo</th><th>Preço (R$)</th><th>No site</th><th></th></tr></thead>
+        <thead><tr><th></th><th>Vinho</th><th class="col-tipo">Tipo</th><th>Preço (R$)</th><th>No site</th><th>Disponível</th><th></th></tr></thead>
         <tbody id="lista"></tbody>
       </table>
     </div>
@@ -323,6 +324,7 @@ function abrirEditor(id, v, precoMistral){
   $("#f-caixa").value = String(v.caixa || 6);
   $("#f-foto").value = v.foto || "";
   $("#f-ativo").checked = v.ativo !== false;
+  $("#f-disponivel").checked = v.disponivel !== false;
   $("#f-ref").textContent = precoMistral ? `Na Mistral: ${brl(precoMistral)}` : "";
   $("#editor").dataset.mistral = v.mistral_id || "";
   preview();
@@ -353,7 +355,7 @@ $("#f-salvar").addEventListener("click", () => {
   if(Number.isNaN(preco)){ alert("O preço precisa ser maior que zero, ou ficar vazio para sob consulta."); return; }
   const dados = {
     nome, vinicola: $("#f-vinicola").value.trim(), uva: $("#f-uva").value.trim(), tipo: $("#f-tipo").value,
-    preco, caixa: parseInt($("#f-caixa").value, 10), foto: $("#f-foto").value.trim(), ativo: $("#f-ativo").checked,
+    preco, caixa: parseInt($("#f-caixa").value, 10), foto: $("#f-foto").value.trim(), ativo: $("#f-ativo").checked, disponivel: $("#f-disponivel").checked,
   };
   const mistral = $("#editor").dataset.mistral; if(mistral) dados.mistral_id = Number(mistral);
   if(editando){
@@ -371,7 +373,8 @@ $("#f-salvar").addEventListener("click", () => {
 const alterado = () => JSON.stringify(produtos) !== original;
 function desenharLista(){
   const ativos = produtos.filter(p => p.ativo !== false).length;
-  $("#resumo").textContent = `${produtos.length} vinhos cadastrados, ${ativos} aparecendo no site.`;
+  const disp = produtos.filter(p => p.ativo !== false && p.disponivel !== false).length;
+  $("#resumo").textContent = `${produtos.length} vinhos cadastrados, ${ativos} aparecendo no site, ${disp} disponíveis para compra. "No site" desligado esconde o vinho; "Disponível" desligado mostra esmaecido.`;
   $("#lista").innerHTML = produtos.map(p => `
     <tr class="${p.ativo === false ? "inativo" : ""}" data-id="${esc(p.id)}">
       <td><div class="mini"><img src="${esc(p.foto || "img/selo.png")}" alt="" onload="${marcarQuadrada}"></div></td>
@@ -379,6 +382,7 @@ function desenharLista(){
       <td class="col-tipo">${esc(p.tipo)}</td>
       <td><input type="text" inputmode="decimal" value="${p.preco == null ? "" : p.preco.toFixed(2).replace(".", ",")}" placeholder="Consulta" data-campo="preco" aria-label="Preço de ${esc(p.nome)}"></td>
       <td class="ativo"><label class="chave"><input type="checkbox" data-campo="ativo" ${p.ativo === false ? "" : "checked"} aria-label="Mostrar ${esc(p.nome)} no site"><span></span></label></td>
+      <td class="ativo"><label class="chave"><input type="checkbox" data-campo="disponivel" ${p.disponivel === false ? "" : "checked"} aria-label="${esc(p.nome)} disponível para compra"><span></span></label></td>
       <td class="acao"><button class="link" data-acao="editar">Editar</button></td>
     </tr>`).join("");
   $("#barra").classList.toggle("vis", alterado());
@@ -391,6 +395,7 @@ $("#lista").addEventListener("change", e => {
     else p.preco = v;
   }
   if(e.target.dataset.campo === "ativo"){ p.ativo = e.target.checked; }
+  if(e.target.dataset.campo === "disponivel"){ p.disponivel = e.target.checked; }
   desenharLista();
 });
 $("#lista").addEventListener("click", e => {
