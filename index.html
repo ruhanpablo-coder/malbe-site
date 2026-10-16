@@ -8,7 +8,7 @@
 <link rel="icon" href="img/selo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Playfair+Display:wght@400;500;600;700&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bordo:#5c0d1d;      /* fundo do selo */
@@ -21,9 +21,9 @@
   --linha:#e2d6c4;
   --branco:#ffffff;
   --verde-wa:#1f8f4e;
-  --serif:"Crimson Pro", Georgia, serif;
+  --serif:"Playfair Display", Georgia, serif;
   --marca:"Cinzel", "Trajan Pro", serif;
-  --sans:"Montserrat", system-ui, -apple-system, sans-serif;
+  --sans:"Lexend", system-ui, -apple-system, sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -64,13 +64,23 @@ nav.menu a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px;t
 .abertura::after{content:"";position:absolute;inset:0;pointer-events:none;background:
   radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,0,0,.15), rgba(0,0,0,.5) 100%),
   linear-gradient(to bottom, rgba(0,0,0,.3) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%)}
+/* efeito cinema: faixas que abrem, granulado de película e feixe de luz */
+.abertura .faixa{position:absolute;left:0;right:0;height:50%;background:#000;z-index:3;animation:abre 1.8s .3s cubic-bezier(.7,0,.2,1) forwards}
+.abertura .faixa.topo-f{top:0;transform-origin:top}
+.abertura .faixa.base-f{bottom:0;transform-origin:bottom}
+@keyframes abre{to{transform:scaleY(.12)}}
+.abertura .grao{position:absolute;inset:-50%;z-index:2;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grao .9s steps(6) infinite}
+@keyframes grao{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-5%)}60%{transform:translate(-6%,-2%)}80%{transform:translate(5%,4%)}100%{transform:translate(0,0)}}
+.abertura .brilho{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.13) 50%,transparent 65%);background-size:250% 100%;animation:brilho 9s ease-in-out infinite}
+@keyframes brilho{from{background-position:130% 0}to{background-position:-30% 0}}
+@media (prefers-reduced-motion:reduce){.abertura .faixa{transform:scaleY(.12)}}
 @keyframes aproxima{from{transform:scale(1) translateY(0)}to{transform:scale(1.14) translateY(-1.5%)}}
-.abertura .wrap{position:relative;z-index:1;padding-top:72px;padding-bottom:72px;width:100%}
-.abertura h1,.abertura .acoes{animation:surge 1.4s cubic-bezier(.2,.7,.2,1) both}
-.abertura .acoes{animation-delay:.35s}
+.abertura .wrap{position:relative;z-index:4;padding-top:72px;padding-bottom:72px;width:100%}
+.abertura h1,.abertura .acoes{animation:surge 1.4s 1.2s cubic-bezier(.2,.7,.2,1) both}
+.abertura .acoes{animation-delay:1.55s}
 @keyframes surge{from{opacity:0;transform:translateY(18px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
 .abertura h1{text-shadow:0 2px 24px rgba(0,0,0,.5)}
-.abertura h1{font-family:var(--serif);font-weight:400;font-size:clamp(36px,4.4vw,58px);line-height:1.08;margin:0 auto 28px;max-width:16ch}
+.abertura h1{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4.4vw,58px);line-height:1.18;margin:0 auto 28px;max-width:16ch}
 .abertura .acoes{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:6px;padding:13px 22px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent}
 .btn-ouro{background:var(--ouro);color:var(--bordo-escuro)}
@@ -89,7 +99,7 @@ nav.menu a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px;t
 /* vitrine */
 section.bloco{padding:64px 0;scroll-margin-top:120px}
 .cabeca-bloco{display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px}
-h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,38px);line-height:1.15;margin:0}
+h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,3.4vw,38px);line-height:1.15;margin:0}
 .cabeca-bloco p{margin:6px 0 0;color:var(--cinza)}
 .filtros{display:flex;gap:8px;flex-wrap:wrap}
 .filtro{border:1px solid var(--linha);background:var(--branco);color:var(--tinta);border-radius:999px;padding:7px 16px;font-size:14.5px}
@@ -102,7 +112,7 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,38px);lin
 .selo-tipo{z-index:1;position:absolute;top:12px;left:12px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:4px;background:var(--papel);color:var(--bordo)}
 .produto .info{padding:16px 18px 18px;border-top:1px solid var(--linha);display:flex;flex-direction:column;gap:4px;flex:1}
 .produto .vinicola{font-size:13.5px;color:var(--cinza)}
-.produto h3{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.2;margin:0}
+.produto h3{font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.2;margin:0}
 .produto .uva{font-size:14px;color:var(--cinza)}
 .precos{margin-top:auto;padding-top:12px}
 .preco{font-size:22px;font-weight:600;color:var(--bordo)}
@@ -124,7 +134,7 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,38px);lin
 /* rodapé */
 footer{background:var(--bordo-escuro);color:#e6d6c6;font-size:14.5px}
 footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;padding-top:48px;padding-bottom:32px}
-footer h4{font-family:var(--serif);font-weight:400;font-size:19px;color:var(--papel);margin:0 0 12px}
+footer h4{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--papel);margin:0 0 12px}
 footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 footer a{text-decoration:none}
 footer a:hover{text-decoration:underline}
@@ -238,6 +248,10 @@ aside.carrinho.aberto{transform:none}
 <main id="inicio">
   <section class="abertura">
     <div class="fundo-foto" aria-hidden="true"></div>
+    <div class="grao" aria-hidden="true"></div>
+    <div class="brilho" aria-hidden="true"></div>
+    <div class="faixa topo-f" aria-hidden="true"></div>
+    <div class="faixa base-f" aria-hidden="true"></div>
     <div class="wrap">
       <div>
         <h1>Vinhos argentinos selecionados</h1>
