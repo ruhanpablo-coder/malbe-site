@@ -59,19 +59,15 @@ nav.menu a{text-decoration:none;font-size:15px;white-space:nowrap;color:var(--pa
 nav.menu a:hover{opacity:1;text-decoration:underline;text-underline-offset:5px;text-decoration-color:var(--ouro)}
 
 /* abertura: fundo bordô e as garrafas reais lado a lado */
-.abertura{background:radial-gradient(ellipse 50% 70% at 75% 60%, #7a1a2c 0%, var(--bordo) 60%);color:var(--papel);overflow:hidden}
-.abertura .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:32px;align-items:center;padding-top:48px;padding-bottom:48px}
-.abertura h1{font-family:var(--serif);font-weight:400;font-size:clamp(36px,4.4vw,58px);line-height:1.08;margin:0 0 28px;max-width:14ch}
-.abertura .acoes{display:flex;gap:12px;flex-wrap:wrap}
+.abertura{background:var(--bordo);color:var(--papel);overflow:hidden;text-align:center}
+.abertura .wrap{padding-top:72px;padding-bottom:72px}
+.abertura h1{font-family:var(--serif);font-weight:400;font-size:clamp(36px,4.4vw,58px);line-height:1.08;margin:0 auto 28px;max-width:16ch}
+.abertura .acoes{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:6px;padding:13px 22px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent}
 .btn-ouro{background:var(--ouro);color:var(--bordo-escuro)}
 .btn-ouro:hover{background:var(--ouro-claro)}
 .btn-linha{border-color:rgba(231,207,156,.55);color:var(--papel)}
 .btn-linha:hover{border-color:var(--ouro-claro)}
-.vitrine-topo{display:flex;align-items:flex-end;justify-content:center;height:360px}
-.vitrine-topo img{height:300px;width:auto;margin:0 -6px;filter:drop-shadow(0 14px 16px rgba(0,0,0,.45))}
-.vitrine-topo img:nth-child(3){height:340px;position:relative;z-index:1}
-.vitrine-topo img:nth-child(2),.vitrine-topo img:nth-child(4){height:320px}
 
 /* vantagens */
 .vantagens{background:var(--branco);border-bottom:1px solid var(--linha)}
@@ -169,12 +165,8 @@ aside.carrinho.aberto{transform:none}
 .idade .sair{display:block;margin-top:12px;font-size:14px;color:var(--cinza)}
 
 @media (max-width:900px){
-  .abertura .wrap{grid-template-columns:1fr;padding-top:36px;padding-bottom:32px;gap:24px}
-  .vitrine-topo{height:250px}
-  .vitrine-topo img{height:200px}
-  .vitrine-topo img:nth-child(3){height:235px}
-  .vitrine-topo img:nth-child(2),.vitrine-topo img:nth-child(4){height:218px}
-  .vantagens .wrap,.passos{grid-template-columns:1fr;gap:18px}
+  .abertura .wrap{padding-top:48px;padding-bottom:48px}
+          .vantagens .wrap,.passos{grid-template-columns:1fr;gap:18px}
   footer .wrap{grid-template-columns:1fr}
 }
 @media (max-width:640px){
@@ -243,13 +235,6 @@ aside.carrinho.aberto{transform:none}
           <a class="btn btn-ouro" href="#vinhos">Ver os vinhos</a>
           <a class="btn btn-linha" id="wa-abertura" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
         </div>
-      </div>
-      <div class="vitrine-topo" aria-hidden="true">
-        <img src="img/saint-felicien.png" alt="">
-        <img src="img/angelica-malbec.png" alt="">
-        <img src="img/dv-malbec-malbec.png" alt="">
-        <img src="img/angelica-chardonnay.png" alt="">
-        <img src="img/dv-cabernet-malbec.png" alt="">
       </div>
     </div>
   </section>
@@ -353,10 +338,10 @@ const LOJA = {
 
 /* preco:null mostra "Preço sob consulta". Para mostrar o preço, troque null pelo valor (ex.: 169.90) */
 const VINHOS = [
-  {id:"malbec-argentino", nome:"Catena Zapata Malbec Argentino", vinicola:"Catena Zapata", uva:"Malbec · 2023", tipo:"Tinto", preco:499.90, caixa:6, foto:"img/malbec-argentino.jpg"},
+  {id:"malbec-argentino", nome:"Catena Zapata Malbec Argentino", vinicola:"Catena Zapata", uva:"Malbec · 2023", tipo:"Tinto", preco:499.90, caixa:6, foto:"img/malbec-argentino.png"},
   {id:"angelica-malbec", nome:"Angélica Zapata Malbec Alta", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:259.90, caixa:4, foto:"img/angelica-malbec.png"},
   {id:"angelica-chardonnay", nome:"Angélica Zapata Chardonnay Alta", vinicola:"Catena Zapata", uva:"Chardonnay", tipo:"Branco", preco:199.90, caixa:4, foto:"img/angelica-chardonnay.png"},
-  {id:"el-enemigo", nome:"El Enemigo Malbec", vinicola:"Aleanna", uva:"Malbec", tipo:"Tinto", preco:169.90, caixa:6, foto:"img/el-enemigo.jpg"},
+  {id:"el-enemigo", nome:"El Enemigo Malbec", vinicola:"Aleanna", uva:"Malbec", tipo:"Tinto", preco:169.90, caixa:6, foto:"img/el-enemigo.png"},
   {id:"rutini", nome:"Rutini Cabernet Malbec", vinicola:"Rutini Wines", uva:"Cabernet Sauvignon e Malbec", tipo:"Tinto", preco:139.90, caixa:6, foto:"img/rutini.jpg"},
   {id:"saint-felicien", nome:"Saint Felicien Malbec", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:59.90, caixa:6, foto:"img/saint-felicien.png"},
   {id:"dv-cabernet-malbec", nome:"D.V. Catena Cabernet Malbec", vinicola:"Catena Zapata", uva:"Cabernet Sauvignon e Malbec", tipo:"Tinto", preco:99.90, caixa:6, foto:"img/dv-cabernet-malbec.png"},
