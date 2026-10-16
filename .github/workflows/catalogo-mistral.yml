@@ -1,0 +1,30 @@
+name: Catálogo Mistral
+
+# Atualiza mistral.json toda segunda de manhã, ou quando alguém clica em "Run workflow".
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: commits-no-site
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/catalogo-mistral.mjs
+      - name: Salvar se mudou
+        run: |
+          git config user.name "robô do catálogo"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mistral.json
+          git diff --cached --quiet -- mistral.json || { git commit -m "Atualiza catálogo da Mistral"; git pull --rebase; git push; }

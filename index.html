@@ -111,6 +111,7 @@ h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,3.4vw,38px);lin
 .produto{background:var(--branco);border:1px solid var(--linha);border-radius:8px;display:flex;flex-direction:column;overflow:hidden}
 .produto .foto{aspect-ratio:4/5;background:var(--branco);position:relative;overflow:hidden}
 .produto .foto img{position:absolute;inset:18px;width:calc(100% - 36px);height:calc(100% - 36px);object-fit:contain}
+.produto .foto img.quadrada{transform:scale(1.45)}
 .produto .foto img.sem-foto{inset:30%;width:40%;height:40%;border-radius:50%;opacity:.85}
 .selo-tipo{z-index:1;position:absolute;top:12px;left:12px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:4px;background:var(--papel);color:var(--bordo)}
 .produto .info{padding:16px 18px 18px;border-top:1px solid var(--linha);display:flex;flex-direction:column;gap:4px;flex:1}
@@ -369,21 +370,12 @@ const LOJA = {
   ],
 };
 
-/* preco:null mostra "Preço sob consulta". Para mostrar o preço, troque null pelo valor (ex.: 169.90) */
-const VINHOS = [
-  {id:"malbec-argentino", nome:"Catena Zapata Malbec Argentino", vinicola:"Catena Zapata", uva:"Malbec · 2023", tipo:"Tinto", preco:499.90, caixa:6, foto:"img/malbec-argentino.png"},
-  {id:"angelica-malbec", nome:"Angélica Zapata Malbec Alta", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:259.90, caixa:4, foto:"img/angelica-malbec.png"},
-  {id:"angelica-chardonnay", nome:"Angélica Zapata Chardonnay Alta", vinicola:"Catena Zapata", uva:"Chardonnay", tipo:"Branco", preco:199.90, caixa:4, foto:"img/angelica-chardonnay.png"},
-  {id:"el-enemigo", nome:"El Enemigo Malbec", vinicola:"Aleanna", uva:"Malbec", tipo:"Tinto", preco:169.90, caixa:6, foto:"img/el-enemigo.png"},
-  {id:"rutini", nome:"Rutini Cabernet Malbec", vinicola:"Rutini Wines", uva:"Cabernet Sauvignon e Malbec", tipo:"Tinto", preco:139.90, caixa:6, foto:"img/rutini.jpg"},
-  {id:"saint-felicien", nome:"Saint Felicien Malbec", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:59.90, caixa:6, foto:"img/saint-felicien.png"},
-  {id:"dv-cabernet-malbec", nome:"D.V. Catena Cabernet Malbec", vinicola:"Catena Zapata", uva:"Cabernet Sauvignon e Malbec", tipo:"Tinto", preco:99.90, caixa:6, foto:"img/dv-cabernet-malbec.png"},
-  {id:"dv-malbec-malbec", nome:"D.V. Catena Malbec-Malbec", vinicola:"Catena Zapata", uva:"Malbec", tipo:"Tinto", preco:144.90, caixa:6, foto:"img/dv-malbec-malbec.png"},
-  {id:"dv-nature", nome:"D.V. Catena Nature", vinicola:"Catena Zapata", uva:"Espumante Nature", tipo:"Espumante", preco:239.90, caixa:6, foto:"img/dv-nature.png"},
-];
+/* os vinhos ficam em produtos.json e são editados pelo painel (admin.html) */
+let VINHOS = [];
 /* ============================================ */
 
 const fotoDe = v => v.foto || "img/selo.png";
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const $ = s => document.querySelector(s);
 const waLink = txt => `https://wa.me/${LOJA.whatsapp}${txt ? "?text="+encodeURIComponent(txt) : ""}`;
@@ -411,10 +403,10 @@ $("#vantagens").innerHTML = LOJA.vantagens.map(([t,d,i]) =>
   `<div class="vantagem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">${ICONES[i]}</svg><div><strong>${t}</strong>${d ? `<span>${d}</span>` : ""}</div></div>`).join("");
 
 /* filtros */
-const tipos = ["todos", ...new Set(VINHOS.map(v => v.tipo))];
+let tipos = ["todos"];
 const nomeFiltro = t => t === "todos" ? "Todos" : t + "s";
 function desenharFiltros(){
-  $("#filtros").innerHTML = tipos.map(t => `<button class="filtro" data-t="${t}" aria-pressed="${t===filtro}">${nomeFiltro(t)}</button>`).join("");
+  $("#filtros").innerHTML = tipos.map(t => `<button class="filtro" data-t="${esc(t)}" aria-pressed="${t===filtro}">${esc(nomeFiltro(t))}</button>`).join("");
 }
 $("#filtros").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.t; desenharFiltros(); desenharGrade(); } });
 document.querySelectorAll("[data-filtro]").forEach(a => a.addEventListener("click", () => { filtro = a.dataset.filtro; desenharFiltros(); desenharGrade(); }));
@@ -427,16 +419,16 @@ function desenharGrade(){
   $("#grade").innerHTML = lista.length ? lista.map(v => {
     const qtd = carrinho[v.id] || 0;
     return `<article class="produto">
-      <div class="foto"><span class="selo-tipo">${v.tipo}</span><img src="${fotoDe(v)}" alt="${v.foto ? "Garrafa de "+v.nome : "Foto em breve"}" loading="lazy" class="${v.foto?"":"sem-foto"}"></div>
+      <div class="foto"><span class="selo-tipo">${esc(v.tipo)}</span><img src="${esc(fotoDe(v))}" alt="${v.foto ? "Garrafa de "+esc(v.nome) : "Foto em breve"}" loading="lazy" class="${v.foto?"":"sem-foto"}" onload="if(this.naturalWidth/this.naturalHeight>.8)this.classList.add('quadrada')"></div>
       <div class="info">
-        <span class="vinicola">${v.vinicola}</span>
-        <h3>${v.nome}</h3>
-        <span class="uva">${v.uva}</span>
+        <span class="vinicola">${esc(v.vinicola)}</span>
+        <h3>${esc(v.nome)}</h3>
+        <span class="uva">${esc(v.uva)}</span>
         <div class="precos">
           <div class="preco">${v.preco ? brl(v.preco) : "Preço sob consulta"}</div>
-          <div class="preco-caixa">${v.preco ? `Caixa com ${v.caixa}: ${brl(v.preco*v.caixa)}` : `Caixa com ${v.caixa} garrafas`}</div>
+          <div class="preco-caixa">${v.preco ? `Caixa com ${v.caixa||6}: ${brl(v.preco*(v.caixa||6))}` : `Caixa com ${v.caixa||6} garrafas`}</div>
         </div>
-        <button class="add ${qtd?"no-carrinho":""}" data-id="${v.id}">${qtd ? `No carrinho (${qtd}). Adicionar mais` : "Adicionar ao carrinho"}</button>
+        <button class="add ${qtd?"no-carrinho":""}" data-id="${esc(v.id)}">${qtd ? `No carrinho (${qtd}). Adicionar mais` : "Adicionar ao carrinho"}</button>
       </div>
     </article>`;
   }).join("") : `<div class="vazio">Nenhum vinho encontrado para essa busca. Tente o nome da uva ou da vinícola.</div>`;
@@ -466,8 +458,8 @@ function desenharCarrinho(){
   $("#enviar").disabled = !ids.length;
   $("#itens").innerHTML = ids.length ? ids.map(id => {
     const v = VINHOS.find(x => x.id===id);
-    return `<div class="item"><img src="${fotoDe(v)}" alt=""><div><strong>${v.nome}</strong><small>${v.preco ? brl(v.preco)+" a garrafa" : "Preço sob consulta"}</small></div>
-      <div class="qtd"><button data-id="${id}" data-d="-1" aria-label="Tirar uma garrafa de ${v.nome}">−</button><span>${carrinho[id]}</span><button data-id="${id}" data-d="1" aria-label="Adicionar uma garrafa de ${v.nome}">+</button></div></div>`;
+    return `<div class="item"><img src="${esc(fotoDe(v))}" alt=""><div><strong>${esc(v.nome)}</strong><small>${v.preco ? brl(v.preco)+" a garrafa" : "Preço sob consulta"}</small></div>
+      <div class="qtd"><button data-id="${esc(id)}" data-d="-1" aria-label="Tirar uma garrafa de ${esc(v.nome)}">−</button><span>${carrinho[id]}</span><button data-id="${esc(id)}" data-d="1" aria-label="Adicionar uma garrafa de ${esc(v.nome)}">+</button></div></div>`;
   }).join("") : `<p class="carrinho-vazio">Seu carrinho está vazio. Escolha um vinho na vitrine para começar.</p>`;
 }
 $("#itens").addEventListener("click", e => { const b = e.target.closest("button[data-d]"); if(b) mudar(b.dataset.id, +b.dataset.d); });
@@ -483,7 +475,7 @@ $("#nome").value = ler("malbe-nome", "");
 $("#enviar").addEventListener("click", () => {
   const nome = $("#nome").value.trim();
   guardar("malbe-nome", nome);
-  const ids = Object.keys(carrinho);
+  const ids = Object.keys(carrinho).filter(id => VINHOS.some(v => v.id===id));
   const linhas = ids.map(id => { const v = VINHOS.find(x=>x.id===id); return `• ${carrinho[id]}x ${v.nome}${v.preco ? ` (${brl(v.preco*carrinho[id])})` : ""}`; });
   const total = totalPedido(ids);
   const fecho = total === null ? "Podem me passar os valores e confirmar o estoque e a entrega?" : `Total: ${brl(total)}\n\nPodem confirmar o estoque e a entrega?`;
@@ -495,7 +487,16 @@ $("#enviar").addEventListener("click", () => {
 if(!ler("malbe-maior", false)){ $("#idade").hidden = false; $("#sou-maior").focus(); }
 $("#sou-maior").addEventListener("click", () => { guardar("malbe-maior", true); $("#idade").hidden = true; });
 
-desenharFiltros(); desenharGrade(); desenharCarrinho();
+/* carrega os vinhos ativos de produtos.json */
+fetch("produtos.json?v=" + Date.now())
+  .then(r => { if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(d => {
+    VINHOS = (d.produtos || []).filter(v => v.ativo !== false);
+    tipos = ["todos", ...new Set(VINHOS.map(v => v.tipo))];
+    desenharFiltros(); desenharGrade(); desenharCarrinho();
+  })
+  .catch(() => { $("#grade").innerHTML = `<div class="vazio">Não foi possível carregar os vinhos agora. Recarregue a página ou fale com a gente pelo WhatsApp.</div>`; });
+desenharCarrinho();
 </script>
 </body>
 </html>

@@ -1,0 +1,103 @@
+{
+ "produtos": [
+  {
+   "id": "malbec-argentino",
+   "nome": "Catena Zapata Malbec Argentino",
+   "vinicola": "Catena Zapata",
+   "uva": "Malbec · 2023",
+   "tipo": "Tinto",
+   "preco": 499.9,
+   "caixa": 6,
+   "foto": "img/malbec-argentino.png",
+   "ativo": true
+  },
+  {
+   "id": "angelica-malbec",
+   "nome": "Angélica Zapata Malbec Alta",
+   "vinicola": "Catena Zapata",
+   "uva": "Malbec",
+   "tipo": "Tinto",
+   "preco": 259.9,
+   "caixa": 4,
+   "foto": "img/angelica-malbec.png",
+   "ativo": true
+  },
+  {
+   "id": "angelica-chardonnay",
+   "nome": "Angélica Zapata Chardonnay Alta",
+   "vinicola": "Catena Zapata",
+   "uva": "Chardonnay",
+   "tipo": "Branco",
+   "preco": 199.9,
+   "caixa": 4,
+   "foto": "img/angelica-chardonnay.png",
+   "ativo": true
+  },
+  {
+   "id": "el-enemigo",
+   "nome": "El Enemigo Malbec",
+   "vinicola": "Aleanna",
+   "uva": "Malbec",
+   "tipo": "Tinto",
+   "preco": 169.9,
+   "caixa": 6,
+   "foto": "img/el-enemigo.png",
+   "ativo": true
+  },
+  {
+   "id": "rutini",
+   "nome": "Rutini Cabernet Malbec",
+   "vinicola": "Rutini Wines",
+   "uva": "Cabernet Sauvignon e Malbec",
+   "tipo": "Tinto",
+   "preco": 139.9,
+   "caixa": 6,
+   "foto": "img/rutini.jpg",
+   "ativo": true
+  },
+  {
+   "id": "saint-felicien",
+   "nome": "Saint Felicien Malbec",
+   "vinicola": "Catena Zapata",
+   "uva": "Malbec",
+   "tipo": "Tinto",
+   "preco": 59.9,
+   "caixa": 6,
+   "foto": "img/saint-felicien.png",
+   "ativo": true
+  },
+  {
+   "id": "dv-cabernet-malbec",
+   "nome": "D.V. Catena Cabernet Malbec",
+   "vinicola": "Catena Zapata",
+   "uva": "Cabernet Sauvignon e Malbec",
+   "tipo": "Tinto",
+   "preco": 99.9,
+   "caixa": 6,
+   "foto": "img/dv-cabernet-malbec.png",
+   "ativo": true
+  },
+  {
+   "id": "dv-malbec-malbec",
+   "nome": "D.V. Catena Malbec-Malbec",
+   "vinicola": "Catena Zapata",
+   "uva": "Malbec",
+   "tipo": "Tinto",
+   "preco": 144.9,
+   "caixa": 6,
+   "foto": "img/dv-malbec-malbec.png",
+   "ativo": true
+  },
+  {
+   "id": "dv-nature",
+   "nome": "D.V. Catena Nature",
+   "vinicola": "Catena Zapata",
+   "uva": "Espumante Nature",
+   "tipo": "Espumante",
+   "preco": 239.9,
+   "caixa": 6,
+   "foto": "img/dv-nature.png",
+   "ativo": true
+  }
+ ]
+}
