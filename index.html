@@ -26,8 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="preload" href="img/vinhedo.jpg" as="image" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bordo:#5c0d1d;      /* fundo do selo */
@@ -43,7 +42,6 @@
   --areia-escura:#efe7e1;
   --verde-wa:#1f8f4e;
   --verde-btn:#0b6150;
-  --serif:"Playfair Display", Georgia, serif;
   --sans:"Lexend", system-ui, -apple-system, sans-serif;
 }
 *{box-sizing:border-box}
@@ -65,7 +63,7 @@ button{font:inherit;cursor:pointer}
 header.topo{background:var(--branco);color:var(--tinta);position:sticky;top:0;z-index:20;box-shadow:0 1px 0 var(--linha),0 2px 10px rgba(30,30,30,.05)}
 .topo > .wrap{display:flex;align-items:center;gap:24px;min-height:72px}
 .marca{display:flex;align-items:center;gap:12px;text-decoration:none}
-.marca img{width:184px;height:56px}
+.marca img{width:106px;height:44px}
 footer .logo-rodape{width:210px;height:auto;margin:-6px 0 14px -6px}
 .busca{flex:1;max-width:440px;position:relative}
 .busca input{width:100%;border:1px solid #d9d4d0;border-radius:999px;padding:10px 18px 10px 44px;font:inherit;font-size:15px;color:var(--tinta);background:var(--branco);transition:border-color .15s}
@@ -80,35 +78,14 @@ nav.menu a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;f
 nav.menu .ic{width:20px;height:20px;flex:none;color:var(--bordo)}
 nav.menu a:hover{border-bottom-color:var(--bordo)}
 
-/* abertura: fundo bordô e as garrafas reais lado a lado */
-.abertura{position:relative;background:#0c0a0a;color:#f6f1ea;overflow:hidden;text-align:center;min-height:min(72vh,620px);display:grid;align-items:center}
-.abertura .fundo-foto{position:absolute;inset:-4%;will-change:transform;background:url("img/vinhedo.jpg") center 58%/cover no-repeat;filter:grayscale(1) contrast(1.1) brightness(.72);transform-origin:50% 46%;animation:aproxima 28s ease-in-out infinite alternate}
-.abertura::after{content:"";position:absolute;inset:0;pointer-events:none;background:
-  radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,0,0,.15), rgba(0,0,0,.5) 100%),
-  linear-gradient(to bottom, rgba(0,0,0,.3) 0%, rgba(0,0,0,.1) 45%, rgba(0,0,0,.55) 100%)}
-/* efeito cinema: faixas que abrem, granulado de película e feixe de luz */
-.abertura .faixa{position:absolute;left:0;right:0;height:50%;background:#000;z-index:3;animation:abre 1.8s .3s cubic-bezier(.7,0,.2,1) forwards}
-.abertura .faixa.topo-f{top:0;transform-origin:top}
-.abertura .faixa.base-f{bottom:0;transform-origin:bottom}
-@keyframes abre{to{transform:scaleY(.12)}}
-.abertura .grao{position:absolute;inset:-50%;z-index:2;will-change:transform;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grao .9s steps(6) infinite}
-@keyframes grao{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-5%)}60%{transform:translate(-6%,-2%)}80%{transform:translate(5%,4%)}100%{transform:translate(0,0)}}
-.abertura .brilho{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.13) 50%,transparent 65%);background-size:250% 100%;animation:brilho 9s ease-in-out infinite}
-@keyframes brilho{from{background-position:130% 0}to{background-position:-30% 0}}
-@media (prefers-reduced-motion:reduce){.abertura .faixa{transform:scaleY(.12)}}
-@keyframes aproxima{from{transform:scale(1) translateY(0)}to{transform:scale(1.14) translateY(-1.5%)}}
-.abertura .wrap{position:relative;z-index:4;padding-top:72px;padding-bottom:72px;width:100%}
-.abertura h1,.abertura .acoes{animation:surge 1.4s 1.2s cubic-bezier(.2,.7,.2,1) both}
-.abertura .acoes{animation-delay:1.55s}
-@keyframes surge{from{opacity:0;transform:translateY(18px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
-.abertura h1{text-shadow:0 2px 24px rgba(0,0,0,.5)}
-.abertura h1{font-family:var(--serif);font-weight:500;font-size:clamp(36px,4.4vw,58px);line-height:1.18;margin:0 auto 28px;max-width:16ch}
-.abertura .acoes{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+/* abertura: faixa clara com título e categorias, como a home do Vivino */
+.abertura{background:var(--areia);text-align:center;padding:48px 0 36px}
+.abertura h1{font-family:var(--sans);font-weight:600;font-size:clamp(28px,3.4vw,40px);line-height:1.15;letter-spacing:-.01em;margin:0}
+.abertura p{margin:8px 0 28px;color:var(--cinza);font-size:16px}
+.abertura .filtros{justify-content:safe center;margin-bottom:0}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 26px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent}
 .btn-ouro{background:var(--ouro);color:var(--bordo-escuro)}
 .btn-ouro:hover{background:var(--ouro-claro)}
-.btn-linha{border-color:rgba(246,241,234,.6);color:var(--papel);background:rgba(0,0,0,.2);backdrop-filter:blur(4px)}
-.btn-linha:hover{border-color:var(--ouro-claro)}
 
 /* vantagens */
 .vantagens{background:var(--branco);border-bottom:1px solid var(--linha)}
@@ -126,9 +103,9 @@ h2{font-family:var(--sans);font-weight:600;font-size:clamp(26px,3vw,34px);line-h
 .filtros{display:flex;gap:28px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 8px;margin-bottom:32px}
 .filtro{flex:none;display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:0;padding:0;color:var(--tinta);font-size:15px;font-weight:500}
 .filtro .circulo{width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--branco),var(--areia-escura));display:grid;place-items:center;overflow:hidden;box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .15s,transform .15s}
-.filtro .circulo img{height:86%;width:auto;mix-blend-mode:multiply}
-.filtro .circulo img.quadrada{height:130%}
-.filtro .circulo img.selo{height:74%;mix-blend-mode:normal}
+.filtro .circulo img{height:88px;width:auto;mix-blend-mode:multiply}
+.filtro .circulo img.quadrada{height:124px}
+.filtro .circulo img.selo{height:72px;mix-blend-mode:normal}
 .filtro:hover .circulo{transform:translateY(-2px)}
 .filtro[aria-pressed="true"] .circulo{box-shadow:inset 0 0 0 2px var(--bordo)}
 .filtro[aria-pressed="true"]{color:var(--bordo)}
@@ -228,14 +205,13 @@ aside.carrinho.aberto{transform:none}
 .idade .sair{display:block;margin-top:12px;font-size:14px;color:var(--cinza)}
 
 @media (max-width:900px){
-  .abertura .wrap{padding-top:48px;padding-bottom:48px}
           .vantagens .wrap,.passos{grid-template-columns:1fr;gap:18px}
   footer .wrap{grid-template-columns:1fr}
 }
 @media (max-width:640px){
   .wrap{padding:0 16px}
   .topo > .wrap{flex-wrap:wrap;gap:10px 12px;padding-top:10px;padding-bottom:10px}
-  .marca img{width:144px;height:44px}
+  .marca img{width:92px;height:38px}
   .busca{order:3;flex-basis:100%;max-width:none}
   .btn-carrinho{margin-left:auto}
   .btn-carrinho .rotulo{display:none}
@@ -245,6 +221,9 @@ aside.carrinho.aberto{transform:none}
   .preco{font-size:18px}
   .filtros{gap:18px;margin:0 -16px 24px;padding:4px 16px 8px}
   .filtro .circulo{width:80px;height:80px}
+  .filtro .circulo img{height:66px}
+  .filtro .circulo img.quadrada{height:94px}
+  .filtro .circulo img.selo{height:56px}
   .filtro{font-size:14px}
   .add{width:100%;justify-content:center}
   section.bloco{padding:44px 0}
@@ -268,7 +247,7 @@ aside.carrinho.aberto{transform:none}
 <header class="topo">
   <div class="wrap">
     <a class="marca" href="#inicio" aria-label="Malbê Vinhos, início">
-      <img src="img/marca/logo-horizontal.png" alt="" width="184" height="56">
+      <img src="img/marca/logo-nome.png" alt="" width="106" height="44">
     </a>
     <label class="busca">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -293,19 +272,10 @@ aside.carrinho.aberto{transform:none}
 
 <main id="inicio">
   <section class="abertura">
-    <div class="fundo-foto" aria-hidden="true"></div>
-    <div class="grao" aria-hidden="true"></div>
-    <div class="brilho" aria-hidden="true"></div>
-    <div class="faixa topo-f" aria-hidden="true"></div>
-    <div class="faixa base-f" aria-hidden="true"></div>
     <div class="wrap">
-      <div>
-        <h1>Vinhos argentinos selecionados</h1>
-        <div class="acoes">
-          <a class="btn btn-ouro" href="#vinhos">Ver os vinhos</a>
-          <a class="btn btn-linha" id="wa-abertura" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
-        </div>
-      </div>
+      <h1>Vinhos argentinos selecionados</h1>
+      <p>Rótulos escolhidos a dedo. Monte o carrinho e peça pelo WhatsApp.</p>
+      <div class="filtros" role="group" aria-label="Filtrar por tipo" id="filtros"></div>
     </div>
   </section>
 
@@ -316,12 +286,8 @@ aside.carrinho.aberto{transform:none}
   <section class="bloco" id="vinhos">
     <div class="wrap">
       <div class="cabeca-bloco">
-        <div>
-          <h2>Nossos vinhos</h2>
-          <p>Rótulos argentinos escolhidos a dedo. Monte o carrinho e peça pelo WhatsApp.</p>
-        </div>
+        <h2>Nossos vinhos</h2>
       </div>
-      <div class="filtros" role="group" aria-label="Filtrar por tipo" id="filtros"></div>
       <div class="grade" id="grade"></div>
     </div>
   </section>
