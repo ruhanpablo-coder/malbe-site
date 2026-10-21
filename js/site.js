@@ -15,7 +15,7 @@ const LOJA = {
 let VINHOS = [];
 /* ============================================ */
 
-const fotoDe = v => v.foto || "img/marca/selo.svg";
+const fotoDe = v => v.foto || "img/marca/simbolo.png";
 const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const $ = s => document.querySelector(s);
@@ -23,6 +23,7 @@ const waLink = txt => `https://wa.me/${LOJA.whatsapp}${txt ? "?text="+encodeURIC
 const guardar = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
 const ler = (k,padrao) => { try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; }catch(e){ return padrao; } };
 
+const ICONE_CARRINHO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.2"/><circle cx="9.5" cy="20" r="1.3"/><circle cx="17.5" cy="20" r="1.3"/></svg>';
 const ICONES = {
   chat:'<path d="M4 5h16v11H9l-5 4z"/>',
   caixa:'<path d="M3 8l9-4 9 4v9l-9 4-9-4z"/><path d="M3 8l9 4 9-4M12 12v9"/>',
@@ -48,8 +49,14 @@ $("#vantagens").innerHTML = LOJA.vantagens.map(([t,d,i]) =>
 /* filtros */
 let tipos = ["todos"];
 const nomeFiltro = t => t === "todos" ? "Todos" : t + "s";
+/* cada categoria mostra a foto de um vinho daquele tipo, como os círculos do Vivino */
+const fotoTipo = t => (VINHOS.find(v => v.tipo === t && v.foto && v.disponivel !== false) || VINHOS.find(v => v.tipo === t && v.foto) || {}).foto;
 function desenharFiltros(){
-  $("#filtros").innerHTML = tipos.map(t => `<button class="filtro" data-t="${esc(t)}" aria-pressed="${t===filtro}">${esc(nomeFiltro(t))}</button>`).join("");
+  $("#filtros").innerHTML = tipos.map(t => {
+    const f = t === "todos" ? "" : fotoTipo(t);
+    const img = f ? `<img src="${esc(f)}" alt="" loading="lazy" decoding="async">` : `<img class="selo" src="img/marca/simbolo.png" alt="">`;
+    return `<button class="filtro" data-t="${esc(t)}" aria-pressed="${t===filtro}"><span class="circulo">${img}</span>${esc(nomeFiltro(t))}</button>`;
+  }).join("");
 }
 $("#filtros").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.t; desenharFiltros(); desenharGrade(); } });
 document.querySelectorAll("[data-filtro]").forEach(a => a.addEventListener("click", () => { filtro = a.dataset.filtro; desenharFiltros(); desenharGrade(); }));
@@ -63,7 +70,7 @@ function desenharGrade(){
     const qtd = carrinho[v.id] || 0;
     const tem = v.disponivel !== false;
     return `<article class="produto${tem ? "" : " indisponivel"}">
-      <div class="foto"><span class="selo-tipo">${tem ? esc(v.tipo) : "Indisponível"}</span><img src="${esc(fotoDe(v))}" alt="${v.foto ? "Garrafa de "+esc(v.nome) : "Foto em breve"}" loading="lazy" class="${v.foto?"":"sem-foto"}"></div>
+      <div class="foto"><span class="selo-tipo">${tem ? esc(v.tipo) : "Indisponível"}</span><img src="${esc(fotoDe(v))}" alt="${v.foto ? "Garrafa de "+esc(v.nome) : "Foto em breve"}" loading="lazy" decoding="async" class="${v.foto?"":"sem-foto"}"></div>
       <div class="info">
         <span class="vinicola">${esc(v.vinicola)}</span>
         <h3>${esc(v.nome)}</h3>
@@ -73,7 +80,7 @@ function desenharGrade(){
           <div class="preco">${v.preco ? brl(v.preco) : "Preço sob consulta"}</div>
           <div class="preco-caixa">${v.preco ? `Caixa com ${v.caixa||6}: ${brl(v.preco*(v.caixa||6))}` : `Caixa com ${v.caixa||6} garrafas`}</div>
         </div>
-        ${tem ? `<button class="add ${qtd?"no-carrinho":""}" data-id="${esc(v.id)}">${qtd ? `No carrinho (${qtd}). Adicionar mais` : "Adicionar ao carrinho"}</button>` : `<button class="add" disabled>Indisponível no momento</button>`}
+        ${tem ? `<button class="add ${qtd?"no-carrinho":""}" data-id="${esc(v.id)}">${ICONE_CARRINHO}${qtd ? `No carrinho (${qtd})` : "Adicionar"}</button>` : `<button class="add" disabled>Indisponível</button>`}
       </div>
     </article>`;
   }).join("") : `<div class="vazio">Nenhum vinho encontrado para essa busca. Tente o nome da uva ou da vinícola.</div>`;
@@ -154,7 +161,7 @@ $("#sou-maior").addEventListener("click", () => { guardar("malbe-maior", true); 
 /* fotos quadradas (da Mistral) ganham zoom para a garrafa ocupar o card */
 document.addEventListener("load", e => {
   const img = e.target;
-  if(img.tagName === "IMG" && img.closest(".produto .foto") && img.naturalWidth / img.naturalHeight > .8) img.classList.add("quadrada");
+  if(img.tagName === "IMG" && img.closest(".produto .foto, .filtro .circulo") && img.naturalWidth / img.naturalHeight > .8) img.classList.add("quadrada");
 }, true);
 
 /* garante tipos certos: texto vira texto, preço e caixa viram número (ou somem) */
@@ -167,8 +174,8 @@ function limpar(v){
            descricao: txt(v.descricao), preco, caixa, foto, disponivel: v.disponivel !== false };
 }
 
-/* carrega os vinhos ativos de produtos.json */
-fetch("produtos.json?v=" + Date.now())
+/* carrega os vinhos ativos de produtos.json; no-cache revalida (304) em vez de baixar de novo toda vez */
+fetch("produtos.json", {cache: "no-cache"})
   .then(r => { if(!r.ok) throw new Error(r.status); return r.json(); })
   .then(d => {
     VINHOS = (Array.isArray(d.produtos) ? d.produtos : []).filter(v => v && v.ativo !== false).map(limpar).filter(v => v.id && v.nome);
