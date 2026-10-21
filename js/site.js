@@ -3,6 +3,7 @@ const LOJA = {
   whatsapp: "5518998154368",            // DDI + DDD + número, só dígitos
   instagram: "https://www.instagram.com/malbevinhos/",
   cidade: "Entregas combinadas pelo WhatsApp",
+  destaque: "",                         // id do vinho em destaque no topo; vazio = primeiro disponível
   aviso: "Lote novo chegando em novembro. Peça pelo WhatsApp e reserve suas garrafas.",
   vantagens: [
     ["Pedido pelo WhatsApp", "Monte o carrinho e envie a mensagem pronta.", "chat"],
@@ -51,13 +52,35 @@ let tipos = ["todos"];
 const nomeFiltro = t => t === "todos" ? "Todos" : t + "s";
 /* cada categoria mostra a foto de um vinho daquele tipo, como os círculos do Vivino */
 const fotoTipo = t => (VINHOS.find(v => v.tipo === t && v.foto && v.disponivel !== false) || VINHOS.find(v => v.tipo === t && v.foto) || {}).foto;
+/* "Todos" junta uma garrafa de cada tipo (até três) */
 function desenharFiltros(){
   $("#filtros").innerHTML = tipos.map(t => {
-    const f = t === "todos" ? "" : fotoTipo(t);
-    const img = f ? `<img src="${esc(f)}" alt="" loading="lazy" decoding="async">` : `<img class="selo" src="img/marca/simbolo.png" alt="">`;
-    return `<button class="filtro" data-t="${esc(t)}" aria-pressed="${t===filtro}"><span class="circulo">${img}</span>${esc(nomeFiltro(t))}</button>`;
+    const fotos = (t === "todos" ? tipos.slice(1, 4).map(fotoTipo) : [fotoTipo(t)]).filter(Boolean);
+    const img = fotos.length ? fotos.map(f => `<img src="${esc(f)}" alt="" loading="lazy" decoding="async">`).join("") : `<img class="selo" src="img/marca/simbolo.png" alt="">`;
+    return `<button class="filtro" data-t="${esc(t)}" aria-pressed="${t===filtro}"><span class="circulo${fotos.length > 1 ? " trio" : ""}">${img}</span>${esc(nomeFiltro(t))}</button>`;
   }).join("");
 }
+
+/* vinho em destaque no topo: o da configuração ou o primeiro disponível com foto */
+function desenharDestaque(){
+  const tem = v => v.disponivel !== false;
+  const v = VINHOS.find(x => x.id === LOJA.destaque && tem(x)) || VINHOS.find(x => tem(x) && x.foto) || VINHOS.find(tem);
+  if(!v){ $("#destaque").hidden = true; return; }
+  const qtd = carrinho[v.id] || 0;
+  $("#destaque").hidden = false;
+  $("#destaque").innerHTML = `<div class="foto"><img src="${esc(fotoDe(v))}" alt="Garrafa de ${esc(v.nome)}" decoding="async"></div>
+    <div>
+      <span class="etiqueta">Destaque</span>
+      <span class="vinicola">${esc(v.vinicola)}</span>
+      <h2>${esc(v.nome)}</h2>
+      <span class="uva">${esc(v.uva)}</span>
+      ${v.descricao ? `<p class="desc">${esc(v.descricao)}</p>` : ""}
+      <div class="preco">${v.preco ? brl(v.preco) : "Preço sob consulta"}</div>
+      <div class="preco-caixa">${v.preco ? `Caixa com ${v.caixa}: ${brl(v.preco*v.caixa)}` : `Caixa com ${v.caixa} garrafas`}</div>
+      <button class="add ${qtd?"no-carrinho":""}" data-id="${esc(v.id)}">${ICONE_CARRINHO}${qtd ? `No carrinho (${qtd})` : "Adicionar"}</button>
+    </div>`;
+}
+$("#destaque").addEventListener("click", e => { const b = e.target.closest(".add"); if(b){ mudar(b.dataset.id, 1); abrir(); } });
 $("#filtros").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.t; desenharFiltros(); desenharGrade(); $("#vinhos").scrollIntoView({block:"start"}); } });
 document.querySelectorAll("[data-filtro]").forEach(a => a.addEventListener("click", () => { filtro = a.dataset.filtro; desenharFiltros(); desenharGrade(); }));
 
@@ -102,7 +125,7 @@ function mudar(id, d){
   carrinho[id] = Math.max(0, (carrinho[id]||0) + d);
   if(!carrinho[id]) delete carrinho[id];
   guardar("malbe-carrinho", carrinho);
-  desenharCarrinho(); desenharGrade();
+  desenharCarrinho(); desenharGrade(); desenharDestaque();
 }
 function desenharCarrinho(){
   const ids = Object.keys(carrinho).filter(comprar);
@@ -161,7 +184,7 @@ $("#sou-maior").addEventListener("click", () => { guardar("malbe-maior", true); 
 /* fotos quadradas (da Mistral) ganham zoom para a garrafa ocupar o card */
 document.addEventListener("load", e => {
   const img = e.target;
-  if(img.tagName === "IMG" && img.closest(".produto .foto, .filtro .circulo") && img.naturalWidth / img.naturalHeight > .8) img.classList.add("quadrada");
+  if(img.tagName === "IMG" && img.closest(".produto .foto, .filtro .circulo, .destaque .foto") && img.naturalWidth / img.naturalHeight > .8) img.classList.add("quadrada");
 }, true);
 
 /* garante tipos certos: texto vira texto, preço e caixa viram número (ou somem) */
@@ -181,7 +204,7 @@ fetch("produtos.json", {cache: "no-cache"})
     VINHOS = (Array.isArray(d.produtos) ? d.produtos : []).filter(v => v && v.ativo !== false).map(limpar).filter(v => v.id && v.nome);
     VINHOS.sort((a, b) => (b.disponivel !== false) - (a.disponivel !== false));
     tipos = ["todos", ...new Set(VINHOS.map(v => v.tipo))];
-    desenharFiltros(); desenharGrade(); desenharCarrinho();
+    desenharFiltros(); desenharGrade(); desenharCarrinho(); desenharDestaque();
   })
   .catch(() => { $("#grade").innerHTML = `<div class="vazio">Não foi possível carregar os vinhos agora. Recarregue a página ou fale com a gente pelo WhatsApp.</div>`; });
 desenharCarrinho();

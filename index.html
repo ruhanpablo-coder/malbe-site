@@ -79,10 +79,35 @@ nav.menu .ic{width:20px;height:20px;flex:none;color:var(--bordo)}
 nav.menu a:hover{border-bottom-color:var(--bordo)}
 
 /* abertura: faixa clara com título e categorias, como a home do Vivino */
-.abertura{background:var(--areia);text-align:center;padding:48px 0 36px}
-.abertura h1{font-family:var(--sans);font-weight:600;font-size:clamp(28px,3.4vw,40px);line-height:1.15;letter-spacing:-.01em;margin:0}
-.abertura p{margin:8px 0 28px;color:var(--cinza);font-size:16px}
+.abertura{background:var(--areia);padding:48px 0 32px}
+.topo-abertura{display:grid;grid-template-columns:1fr minmax(0,500px);gap:48px;align-items:center;margin-bottom:40px}
+.sobretitulo{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ouro);margin-bottom:10px}
+.abertura h1{font-family:var(--sans);font-weight:600;font-size:clamp(32px,4vw,48px);line-height:1.1;letter-spacing:-.015em;margin:0;max-width:14ch}
+.abertura .chamada p{margin:12px 0 24px;color:var(--cinza);font-size:17px;max-width:40ch}
+.btn-bordo{background:var(--bordo);color:var(--branco)}
+.btn-bordo:hover{background:var(--bordo-escuro)}
 .abertura .filtros{justify-content:safe center;margin-bottom:0}
+/* vinho em destaque: card bordô ao lado do título */
+.destaque{position:relative;display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;background:linear-gradient(135deg,var(--bordo),var(--bordo-escuro));color:var(--papel);border-radius:16px;padding:22px;box-shadow:0 18px 40px -18px rgba(58,7,18,.55)}
+.destaque[hidden]{display:none}
+.destaque .foto{aspect-ratio:3/4;border-radius:12px;background:radial-gradient(circle at 50% 40%,var(--branco),var(--areia-escura));position:relative;overflow:hidden}
+.destaque .foto img{position:absolute;inset:10px;width:calc(100% - 20px);height:calc(100% - 20px);object-fit:contain;mix-blend-mode:multiply}
+.destaque .foto img.quadrada{transform:scale(1.3)}
+.destaque .etiqueta{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--ouro);color:var(--bordo-escuro);border-radius:999px;padding:3px 10px;margin-bottom:10px}
+.destaque .vinicola{display:block;font-size:14px;color:var(--ouro-claro)}
+.destaque h2{font-size:22px;line-height:1.2;margin:2px 0 4px}
+.destaque .uva{font-size:14px;opacity:.8}
+.destaque .desc{color:var(--papel);opacity:.78;margin-top:8px;-webkit-line-clamp:3}
+.destaque .preco{color:var(--ouro-claro);margin-top:12px}
+.destaque .preco-caixa{color:var(--papel);opacity:.7}
+.destaque .add{background:var(--ouro);color:var(--bordo-escuro);font-weight:600}
+.destaque .add:hover{background:var(--ouro-claro)}
+.destaque .add.no-carrinho{background:transparent;color:var(--ouro-claro);box-shadow:inset 0 0 0 1.5px var(--ouro-claro)}
+/* "Todos": três garrafas sobrepostas */
+.filtro .circulo.trio{display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px}
+.filtro .circulo.trio img{height:70px;margin:0 -9px}
+.filtro .circulo.trio img:nth-child(2){height:84px;position:relative;z-index:1}
+.filtro .circulo.trio img.quadrada{height:96px;margin:0 -24px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 26px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent}
 .btn-ouro{background:var(--ouro);color:var(--bordo-escuro)}
 .btn-ouro:hover{background:var(--ouro-claro)}
@@ -206,6 +231,7 @@ aside.carrinho.aberto{transform:none}
 
 @media (max-width:900px){
           .vantagens .wrap,.passos{grid-template-columns:1fr;gap:18px}
+  .topo-abertura{grid-template-columns:1fr;gap:28px;margin-bottom:32px}
   footer .wrap{grid-template-columns:1fr}
 }
 @media (max-width:640px){
@@ -224,7 +250,13 @@ aside.carrinho.aberto{transform:none}
   .filtro .circulo img{height:66px}
   .filtro .circulo img.quadrada{height:94px}
   .filtro .circulo img.selo{height:56px}
-  .filtro{font-size:14px}
+  .filtro .circulo.trio img{height:54px;margin:0 -7px}
+  .filtro .circulo.trio img:nth-child(2){height:64px}
+  .abertura{padding-top:32px}
+  .destaque{grid-template-columns:112px 1fr;gap:16px;padding:16px}
+  .destaque h2{font-size:18px}
+  .destaque .desc{display:none}
+  .destaque .add{width:auto}  .filtro{font-size:14px}
   .add{width:100%;justify-content:center}
   section.bloco{padding:44px 0}
 }
@@ -273,8 +305,15 @@ aside.carrinho.aberto{transform:none}
 <main id="inicio">
   <section class="abertura">
     <div class="wrap">
-      <h1>Vinhos argentinos selecionados</h1>
-      <p>Rótulos escolhidos a dedo. Monte o carrinho e peça pelo WhatsApp.</p>
+      <div class="topo-abertura">
+        <div class="chamada">
+          <span class="sobretitulo">Curadoria Malbê</span>
+          <h1>Vinhos argentinos selecionados</h1>
+          <p>Rótulos escolhidos a dedo. Monte o carrinho e peça pelo WhatsApp.</p>
+          <a class="btn btn-bordo" href="#vinhos">Ver os vinhos</a>
+        </div>
+        <article class="destaque" id="destaque" hidden></article>
+      </div>
       <div class="filtros" role="group" aria-label="Filtrar por tipo" id="filtros"></div>
     </div>
   </section>
