@@ -42,7 +42,7 @@ $("#aviso").append(LOJA.aviso);
 $("#rodape-cidade").textContent = LOJA.cidade;
 $("#ano").textContent = new Date().getFullYear();
 const ola = "Olá, Malbê! Vim pelo site e queria saber sobre os vinhos.";
-["#wa-rodape","#wa-redes","#wa-flutuante"].forEach(s => $(s).href = waLink(ola));
+["#wa-topo","#wa-rodape","#wa-redes","#wa-flutuante"].forEach(s => $(s).href = waLink(ola));
 $("#ig-rodape").href = $("#ig-redes").href = LOJA.instagram;
 $("#vantagens").innerHTML = LOJA.vantagens.map(([t,d,i]) =>
   `<div class="vantagem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">${ICONES[i]}</svg><div><strong>${t}</strong>${d ? `<span>${d}</span>` : ""}</div></div>`).join("");
@@ -82,7 +82,6 @@ function desenharDestaque(){
 }
 $("#destaque").addEventListener("click", e => { const b = e.target.closest(".add"); if(b){ mudar(b.dataset.id, 1); abrir(); } });
 $("#filtros").addEventListener("click", e => { const b = e.target.closest("button"); if(b){ filtro = b.dataset.t; desenharFiltros(); desenharGrade(); $("#vinhos").scrollIntoView({block:"start"}); } });
-document.querySelectorAll("[data-filtro]").forEach(a => a.addEventListener("click", () => { filtro = a.dataset.filtro; desenharFiltros(); desenharGrade(); }));
 
 /* vitrine */
 const semAcento = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
