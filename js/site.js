@@ -1,7 +1,7 @@
 /* ===== Configuração da loja: edite aqui ===== */
 const LOJA = {
   whatsapp: "5518998154368",            // DDI + DDD + número, só dígitos
-  instagram: "https://www.instagram.com/malbevinhos/",
+  instagram: "https://www.instagram.com/malbevinhos01/",
   cidade: "Entregas combinadas pelo WhatsApp",
   destaque: "",                         // id do vinho em destaque no topo; vazio = primeiro disponível
   aviso: "Lote novo chegando em novembro. Peça pelo WhatsApp e reserve suas garrafas.",
