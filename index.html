@@ -105,11 +105,12 @@ footer .logo-rodape{width:210px;height:auto;margin:-6px 0 14px -6px}
 .destaque .add:hover{background:var(--ouro-claro)}
 .destaque .add.no-carrinho{background:transparent;color:var(--ouro-claro);box-shadow:inset 0 0 0 1.5px var(--ouro-claro)}
 /* "Todos": três garrafas sobrepostas */
-.filtro .circulo.trio{display:flex;align-items:flex-end;justify-content:center;gap:2px;padding-bottom:15px}
-.filtro .circulo.trio img{height:64px;margin:0}
-.filtro .circulo.trio img:first-child{height:76px}
-.filtro .circulo.trio img:nth-child(2){height:72px;position:relative;z-index:1}
-.filtro .circulo.trio img.quadrada{height:96px;margin:0 -24px}
+/* "Todos": três garrafas retas na mesma base, a do meio maior; medidas em % para valer em qualquer tamanho de círculo */
+.filtro .circulo.trio{position:relative;display:block}
+.filtro .circulo.trio img{position:absolute;bottom:12%;left:50%;height:63%;margin:0;mix-blend-mode:normal;transform:translateX(-50%)}
+.filtro .circulo.trio img:nth-child(1){left:32.5%}
+.filtro .circulo.trio img:nth-child(2){height:77%;z-index:1}
+.filtro .circulo.trio img:nth-child(3){left:67.5%}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 26px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent}
 .btn-ouro{background:var(--ouro);color:var(--bordo-escuro)}
 .btn-ouro:hover{background:var(--ouro-claro)}
@@ -254,10 +255,6 @@ aside.carrinho.aberto{transform:none}
   .filtro .circulo img{height:66px}
   .filtro .circulo img.quadrada{height:94px}
   .filtro .circulo img.selo{height:56px}
-  .filtro .circulo.trio{padding-bottom:12px}
-  .filtro .circulo.trio img{height:48px}
-  .filtro .circulo.trio img:first-child{height:57px}
-  .filtro .circulo.trio img:nth-child(2){height:54px}
   .abertura{padding-top:32px}
   .destaque{grid-template-columns:112px 1fr;gap:16px;padding:16px}
   .destaque h2{font-size:18px}
