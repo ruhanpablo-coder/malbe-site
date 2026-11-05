@@ -105,9 +105,10 @@ footer .logo-rodape{width:210px;height:auto;margin:-6px 0 14px -6px}
 .destaque .add:hover{background:var(--ouro-claro)}
 .destaque .add.no-carrinho{background:transparent;color:var(--ouro-claro);box-shadow:inset 0 0 0 1.5px var(--ouro-claro)}
 /* "Todos": três garrafas sobrepostas */
-.filtro .circulo.trio{display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px}
-.filtro .circulo.trio img{height:70px;margin:0 -9px}
-.filtro .circulo.trio img:nth-child(2){height:84px;position:relative;z-index:1}
+.filtro .circulo.trio{display:flex;align-items:flex-end;justify-content:center;gap:2px;padding-bottom:15px}
+.filtro .circulo.trio img{height:64px;margin:0}
+.filtro .circulo.trio img:first-child{height:76px}
+.filtro .circulo.trio img:nth-child(2){height:72px;position:relative;z-index:1}
 .filtro .circulo.trio img.quadrada{height:96px;margin:0 -24px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 26px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent}
 .btn-ouro{background:var(--ouro);color:var(--bordo-escuro)}
@@ -127,9 +128,9 @@ section.bloco{padding:56px 0;scroll-margin-top:120px}
 h2{font-family:var(--sans);font-weight:600;font-size:clamp(26px,3vw,34px);line-height:1.15;letter-spacing:-.01em;margin:0}
 .cabeca-bloco p{margin:6px 0 0;color:var(--cinza);font-size:16px}
 .filtros{display:flex;gap:28px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 8px;margin-bottom:32px}
-.filtro{flex:none;display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:0;padding:0;color:var(--tinta);font-size:15px;font-weight:500}
+.filtro{flex:none;display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:0;padding:0;color:var(--tinta);font-size:15px;font-weight:500;-webkit-user-select:none;user-select:none}
 .filtro .circulo{width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--branco),var(--areia-escura));display:grid;place-items:center;overflow:hidden;box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .15s,transform .15s}
-.filtro .circulo img{height:88px;width:auto;mix-blend-mode:multiply}
+.filtro .circulo img{height:88px;width:auto;mix-blend-mode:multiply;-webkit-user-drag:none}
 .filtro .circulo img.quadrada{height:124px}
 .filtro .circulo img.selo{height:72px;mix-blend-mode:normal}
 .filtro:hover .circulo{transform:translateY(-2px)}
@@ -253,8 +254,10 @@ aside.carrinho.aberto{transform:none}
   .filtro .circulo img{height:66px}
   .filtro .circulo img.quadrada{height:94px}
   .filtro .circulo img.selo{height:56px}
-  .filtro .circulo.trio img{height:54px;margin:0 -7px}
-  .filtro .circulo.trio img:nth-child(2){height:64px}
+  .filtro .circulo.trio{padding-bottom:12px}
+  .filtro .circulo.trio img{height:48px}
+  .filtro .circulo.trio img:first-child{height:57px}
+  .filtro .circulo.trio img:nth-child(2){height:54px}
   .abertura{padding-top:32px}
   .destaque{grid-template-columns:112px 1fr;gap:16px;padding:16px}
   .destaque h2{font-size:18px}
