@@ -4,7 +4,7 @@ const LOJA = {
   instagram: "https://www.instagram.com/malbevinhos01/",
   cidade: "Entregas combinadas pelo WhatsApp",
   destaque: "",                         // id do vinho em destaque no topo; vazio = primeiro disponível
-  aviso: "Lote novo chegando em novembro. Peça pelo WhatsApp e reserve suas garrafas.",
+  aviso: "",                            // faixa no topo do site; vazio = sem faixa
   vantagens: [
     ["Pedido pelo WhatsApp", "Monte o carrinho e envie a mensagem pronta.", "chat"],
     ["Caixa fechada", "Leve 4 ou 6 garrafas do mesmo vinho.", "caixa"],
@@ -37,8 +37,12 @@ for(const k of Object.keys(carrinho)){ const q = carrinho[k]; if(!Number.isInteg
 let filtro = "todos";
 
 /* textos e links */
-$("#aviso").innerHTML = `<span class="ponto" aria-hidden="true"></span>`;
-$("#aviso").append(LOJA.aviso);
+if(LOJA.aviso){
+  $("#aviso").innerHTML = `<span class="ponto" aria-hidden="true"></span>`;
+  $("#aviso").append(LOJA.aviso);
+}else{
+  $("#aviso").hidden = true;
+}
 $("#rodape-cidade").textContent = LOJA.cidade;
 $("#ano").textContent = new Date().getFullYear();
 const ola = "Olá, Malbê! Vim pelo site e queria saber sobre os vinhos.";
