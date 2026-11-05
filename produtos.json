@@ -47,7 +47,7 @@
    "tipo": "Tinto",
    "preco": 139.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-rutini-cabernet-franc-malbec.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "Corte de Cabernet Franc e Malbec, com 12 meses em carvalho."
@@ -60,7 +60,7 @@
    "tipo": "Tinto",
    "preco": 119.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-luigi-bosca-malbec.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "100% Malbec de Luján de Cuyo e Vale de Uco."
@@ -99,7 +99,7 @@
    "tipo": "Tinto",
    "preco": 94.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-saint-felicien-cabernet-sauvignon.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "100% Cabernet Sauvignon, com 16 meses em carvalho."
@@ -112,7 +112,7 @@
    "tipo": "Tinto",
    "preco": 54.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-cordero-malbec.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "Malbec com 6 meses em carvalho."
@@ -125,7 +125,7 @@
    "tipo": "Doce",
    "preco": 59.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-cosecha-tardia-tinto.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "Tinto doce de Merlot, em garrafa de 750 ml."
@@ -138,7 +138,7 @@
    "tipo": "Doce",
    "preco": 69.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-cosecha-tardia-rosado.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "Rosé doce de colheita tardia, em garrafa de 750 ml."
@@ -151,7 +151,7 @@
    "tipo": "Espumante",
    "preco": 89.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-freixenet-x-dulce.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "Espumante doce feito pelo método Charmat."
@@ -164,7 +164,7 @@
    "tipo": "Espumante",
    "preco": 54.9,
    "caixa": 6,
-   "foto": "",
+   "foto": "img/p-cordero-espumante-demi-sec.png",
    "ativo": true,
    "disponivel": true,
    "descricao": "Espumante demi sec feito pelo método Charmat, em garrafa de 750 ml."
