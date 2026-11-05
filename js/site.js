@@ -3,7 +3,7 @@ const LOJA = {
   whatsapp: "5518998154368",            // DDI + DDD + número, só dígitos
   instagram: "https://www.instagram.com/malbevinhos01/",
   cidade: "Entregas combinadas pelo WhatsApp",
-  destaque: "",                         // id do vinho em destaque no topo; vazio = primeiro disponível
+  destaque: "el-enemigo-bonarda",       // id do vinho em destaque no topo; vazio = primeiro disponível
   aviso: "",                            // faixa no topo do site; vazio = sem faixa
   vantagens: [
     ["Pedido pelo WhatsApp", "Monte o carrinho e envie a mensagem pronta.", "chat"],
