@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/checkout.js": {
+      "includeFiles": "produtos.json"
+    }
+  }
+}

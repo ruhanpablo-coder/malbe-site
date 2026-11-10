@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://cdn.mistral.com.br; connect-src 'self'; base-uri 'none'; form-action 'none'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://cdn.mistral.com.br; connect-src 'self' https://*.vercel.app; base-uri 'none'; form-action 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Malbê Vinhos Selecionados</title>
 <meta name="description" content="Vinhos argentinos selecionados pela Malbê. Escolha os rótulos e faça o pedido pelo WhatsApp.">
@@ -219,6 +219,10 @@ aside.carrinho.aberto{transform:none}
 .enviar{width:100%;background:var(--verde-wa);color:#fff;border:0;border-radius:6px;padding:14px;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px}
 .enviar:disabled{opacity:.45;cursor:not-allowed}
 .enviar svg{width:20px;height:20px}
+.pagar{width:100%;background:var(--bordo);color:#fff;border:0;border-radius:6px;padding:14px;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;transition:background .15s}
+.pagar:hover{background:var(--bordo-escuro)}
+.pagar:disabled{opacity:.45;cursor:not-allowed}
+.pagar svg{width:20px;height:20px}
 .obs{font-size:13px;color:var(--cinza);margin:10px 0 0}
 
 /* idade */
@@ -390,6 +394,10 @@ aside.carrinho.aberto{transform:none}
     <button class="enviar" id="enviar" disabled>
       <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Z"/></svg>
       Enviar pedido pelo WhatsApp
+    </button>
+    <button class="pagar" id="pagar" disabled hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 9.5h19"/></svg>
+      Pagar online (cartão ou Pix)
     </button>
     <p class="obs">O pedido só é confirmado depois que a gente responder com o estoque e a entrega.</p>
   </footer>

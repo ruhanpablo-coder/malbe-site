@@ -5,6 +5,7 @@ const LOJA = {
   cidade: "Entregas combinadas pelo WhatsApp",
   destaque: "el-enemigo-bonarda",       // id do vinho em destaque no topo; vazio = primeiro disponível
   aviso: "Faça suas compras para as festas de fim de ano. Peça pelo WhatsApp.",   // faixa no topo do site; vazio = sem faixa
+  pagamento: "",                        // URL da função de pagamento na Vercel (ex.: https://malbe-site.vercel.app/api/checkout); vazio = sem botão "Pagar online"
   vantagens: [
     ["Pedido pelo WhatsApp", "Monte o carrinho e envie a mensagem pronta.", "chat"],
     ["Caixa fechada", "Leve 4 ou 6 garrafas do mesmo vinho.", "caixa"],
@@ -35,6 +36,14 @@ let carrinho = ler("malbe-carrinho", {});
 if(!carrinho || typeof carrinho !== "object" || Array.isArray(carrinho)) carrinho = {};
 for(const k of Object.keys(carrinho)){ const q = carrinho[k]; if(!Number.isInteger(q) || q < 1 || q > 999) delete carrinho[k]; }
 let filtro = "todos";
+
+/* volta do checkout da InfinitePay: o comprovante chega com transaction_nsu na URL */
+if(new URLSearchParams(location.search).get("transaction_nsu")){
+  carrinho = {};
+  guardar("malbe-carrinho", carrinho);
+  LOJA.aviso = "Pagamento recebido! Obrigado pela compra. Vamos combinar a entrega pelo WhatsApp.";
+  history.replaceState(null, "", location.pathname);
+}
 
 /* textos e links */
 if(LOJA.aviso){
@@ -137,6 +146,8 @@ function desenharCarrinho(){
   $("#contador").textContent = garrafas;
   $("#total").textContent = total === null ? "Sob consulta" : brl(total);
   $("#enviar").disabled = !ids.length;
+  /* pagar online exige que todo item do pedido tenha preço */
+  $("#pagar").disabled = !ids.length || total === null;
   $("#itens").innerHTML = ids.length ? ids.map(id => {
     const v = VINHOS.find(x => x.id===id);
     return `<div class="item"><img src="${esc(fotoDe(v))}" alt=""><div><strong>${esc(v.nome)}</strong><small>${v.preco ? brl(v.preco)+" a garrafa" : "Preço sob consulta"}</small></div>
@@ -179,6 +190,31 @@ $("#enviar").addEventListener("click", () => {
   ].join("\n");
   window.open(waLink(msg), "_blank", "noopener");
 });
+
+/* pagamento online: a função na Vercel cria o link na InfinitePay com os preços do servidor */
+if(LOJA.pagamento){
+  const botao = $("#pagar");
+  botao.hidden = false;
+  const rotulo = botao.innerHTML;
+  botao.addEventListener("click", async () => {
+    const ids = Object.keys(carrinho).filter(comprar);
+    if(!ids.length) return;
+    const nome = $("#nome").value.trim();
+    guardar("malbe-nome", nome);
+    botao.disabled = true;
+    botao.textContent = "Gerando pagamento…";
+    const r = await fetch(LOJA.pagamento, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ itens: Object.fromEntries(ids.map(id => [id, carrinho[id]])), nome }),
+    }).catch(() => null);
+    const d = r ? await r.json().catch(() => ({})) : {};
+    if(r && r.ok && d.url){ location.href = d.url; return; }
+    botao.innerHTML = rotulo;
+    botao.disabled = false;
+    alert(d.erro || "Não deu para gerar o pagamento agora. Tente de novo ou peça pelo WhatsApp.");
+  });
+}
 
 /* aviso de idade */
 if(!ler("malbe-maior", false)){ $("#idade").hidden = false; $("#sou-maior").focus(); }
