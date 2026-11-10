@@ -5,7 +5,7 @@ const LOJA = {
   cidade: "Entregas combinadas pelo WhatsApp",
   destaque: "el-enemigo-bonarda",       // id do vinho em destaque no topo; vazio = primeiro disponível
   aviso: "Faça suas compras para as festas de fim de ano. Peça pelo WhatsApp.",   // faixa no topo do site; vazio = sem faixa
-  pagamento: "",                        // URL da função de pagamento na Vercel (ex.: https://malbe-site.vercel.app/api/checkout); vazio = sem botão "Pagar online"
+  pagamento: "https://malbe-site.vercel.app/api/checkout",   // URL da função de pagamento na Vercel; vazio = sem botão "Pagar online"
   vantagens: [
     ["Pedido pelo WhatsApp", "Monte o carrinho e envie a mensagem pronta.", "chat"],
     ["Caixa fechada", "Leve 4 ou 6 garrafas do mesmo vinho.", "caixa"],
