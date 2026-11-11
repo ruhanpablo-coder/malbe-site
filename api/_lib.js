@@ -4,6 +4,12 @@
 const SITE = "https://www.malbevinhos.com.br";
 const ORIGENS = new Set([SITE, "https://malbevinhos.com.br"]);
 
+/* Base onde ESTAS funções rodam. O domínio malbevinhos.com.br é GitHub Pages
+   (um POST lá responde 405): o webhook precisa apontar para a Vercel. */
+function baseFuncoes(env) {
+  return env.FUNCOES_URL || "https://malbe-site.vercel.app";
+}
+
 function cabecalhos(env) {
   return {
     apikey: env.SUPABASE_SERVICE_ROLE_KEY,
@@ -58,4 +64,4 @@ function aplicarCors(req, res) {
   return false;
 }
 
-module.exports = { rpc, logIntegracao, aplicarCors, SITE };
+module.exports = { rpc, logIntegracao, aplicarCors, SITE, baseFuncoes };

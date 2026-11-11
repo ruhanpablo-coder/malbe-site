@@ -23,13 +23,17 @@ module.exports = async (req, res) => {
   const evento = payload.event || "paid";
 
   try {
-    if (evento === "refunded" || evento === "canceled") {
-      const estorno = await rpc("estornar_pedido_site", { p_order_nsu: order_nsu, p_motivo: evento }, env);
-      if (!estorno.ok) {
-        await logIntegracao({ direcao: "webhook", request: { order_nsu, evento }, response: estorno.dados, statusHttp: estorno.status, erro: "estorno falhou" }, env);
-        return res.status(500).json({ erro: "Falha ao estornar." });
-      }
-      return res.status(200).json({ ok: true });
+    if (evento !== "paid") {
+      /* refunded/canceled NÃO agem sozinhos: o webhook não tem assinatura e o
+         payment_check só prova pagamento — um estorno forjado devolveria
+         estoque e apagaria receita. Fica no log; o estorno é lançado no gestão. */
+      await logIntegracao({ direcao: "webhook", request: { order_nsu, evento }, response: null, statusHttp: null, erro: `evento ${evento} não é verificável: tratar no gestão` }, env);
+      return res.status(200).json({ ok: false });
+    }
+
+    if (!env.INFINITEPAY_HANDLE) {
+      await logIntegracao({ direcao: "payment_check", request: { order_nsu }, response: null, statusHttp: null, erro: "INFINITEPAY_HANDLE não configurada" }, env);
+      return res.status(500).json({ erro: "INFINITEPAY_HANDLE não configurada." });
     }
 
     // Autenticidade: o payment_check é a única prova de pagamento.
@@ -45,7 +49,7 @@ module.exports = async (req, res) => {
       await logIntegracao({ direcao: "payment_check", request: { order_nsu, transaction_nsu, slug: invoice_slug }, response: null, statusHttp: null, erro: String(e) }, env);
       return res.status(500).json({ erro: "payment_check indisponível." });
     }
-    const pago = dadosCheck && dadosCheck.success === true && dadosCheck.paid === true;
+    const pago = check.ok && dadosCheck && dadosCheck.success === true && dadosCheck.paid === true;
     await logIntegracao({
       direcao: "payment_check",
       request: { handle: env.INFINITEPAY_HANDLE ? "(configurado)" : null, order_nsu, transaction_nsu, slug: invoice_slug },
@@ -53,7 +57,9 @@ module.exports = async (req, res) => {
       statusHttp: check.status,
       erro: pago ? "" : "payment_check não confirmou o pagamento",
     }, env);
-    // Não confirmado: 200 mesmo assim, senão a InfinitePay reenvia um aviso que nunca vai confirmar.
+    // Falha transitória (não-2xx) não é "não pago": 500 faz a InfinitePay reenviar.
+    if (!check.ok) return res.status(500).json({ erro: "payment_check indisponível." });
+    // Resposta 2xx sem paid:true é definitivo: 200, senão a InfinitePay reenvia um aviso que nunca vai confirmar.
     if (!pago) return res.status(200).json({ ok: false });
 
     const confirmacao = await rpc("confirmar_pedido_site", {
@@ -68,16 +74,10 @@ module.exports = async (req, res) => {
       return res.status(500).json({ erro: "Falha ao confirmar o pedido." });
     }
 
-    // Esgotou no site → republica o catálogo (disponivel: false / some).
-    if (confirmacao.dados && confirmacao.dados.esgotou && env.GESTAO_URL && env.INTEGRACAO_SECRET) {
-      try {
-        await fetch(`${env.GESTAO_URL}/api/publicar-site`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-integracao-secret": env.INTEGRACAO_SECRET },
-          body: JSON.stringify({}),
-        });
-      } catch (e) { /* a republicação pode ser refeita pela tela Integrações */ }
-    }
+    /* Esgotou? A republicação NÃO roda aqui: são várias chamadas ao GitHub e a
+       InfinitePay espera 2xx em <1s. A cron do gestão republica quando o
+       catálogo gerado difere do publicado; o checkout recusa venda sem estoque
+       nesse meio-tempo. */
 
     // Aviso de venda para o gestão (e-mail); falha não derruba o webhook.
     if (env.GESTAO_URL && env.INTEGRACAO_SECRET) {

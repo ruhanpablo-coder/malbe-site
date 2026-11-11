@@ -85,23 +85,52 @@ test('payload sem campos essenciais → 400 e log mesmo assim', async t => {
   assert.deepEqual(log.corpo.request, { qualquer: 1 });
 });
 
-test('evento refunded estorna o pedido', async t => {
+test('evento refunded/canceled NÃO estorna sozinho (sem como verificar): só loga', async t => {
+  // O webhook não tem assinatura e o payment_check só prova pagamento: um
+  // refunded forjado não pode devolver estoque nem apagar receita.
   const chamadas = fetchFalso(t);
   const res = resFalsa();
   await handler(req({ ...PAYLOAD, event: 'refunded' }), res);
   assert.equal(res.codigo, 200);
-  const estorno = chamadas.find(c => c.url.includes('estornar_pedido_site'));
-  assert.deepEqual(estorno.corpo, { p_order_nsu: 'malbe-1', p_motivo: 'refunded' });
+  assert.ok(!chamadas.some(c => c.url.includes('estornar_pedido_site')), 'estorno automático é forjável');
   assert.ok(!chamadas.some(c => c.url.includes('confirmar_pedido_site')));
+  const log = chamadas.filter(c => c.url.includes('integracao_logs')).map(c => c.corpo).find(l => l.erro);
+  assert.ok(log, 'evento não tratado precisa ficar no log com erro');
 });
 
-test('esgotou dispara republicação no gestão com o secret', async t => {
+test('esgotou não republica dentro do webhook (cron cobre); notificação sai', async t => {
   const chamadas = fetchFalso(t, { confirmacao: { venda_id: 'V9', esgotou: true, repetido: false } });
   const res = resFalsa();
   await handler(req(PAYLOAD), res);
-  const pub = chamadas.find(c => c.url === 'https://malbe-gestao.vercel.app/api/publicar-site');
-  assert.ok(pub, 'republicação ausente');
-  assert.equal(pub.headers['x-integracao-secret'], 'segredo');
+  assert.equal(res.codigo, 200);
+  assert.ok(!chamadas.some(c => c.url.includes('/api/publicar-site')), 'republicar no webhook estoura o prazo de 1s');
+  const notif = chamadas.find(c => c.url === 'https://malbe-gestao.vercel.app/api/notificar');
+  assert.ok(notif, 'notificação ausente');
+  assert.equal(notif.headers['x-integracao-secret'], 'segredo');
+});
+
+test('payment_check fora do ar (não-2xx) → 500 para a InfinitePay reenviar', async t => {
+  const chamadas = [];
+  t.mock.method(globalThis, 'fetch', async (url, opcoes = {}) => {
+    const u = String(url);
+    chamadas.push({ url: u });
+    if (u.includes('payment_check')) return { ok: false, status: 503, json: async () => ({ erro: 'manutenção' }) };
+    return { ok: true, status: 201, json: async () => null };
+  });
+  const res = resFalsa();
+  await handler(req(PAYLOAD), res);
+  assert.equal(res.codigo, 500);
+  assert.ok(!chamadas.some(c => c.url.includes('confirmar_pedido_site')));
+});
+
+test('sem INFINITEPAY_HANDLE configurado → 500, nunca confirma às cegas', async t => {
+  const antigo = process.env.INFINITEPAY_HANDLE;
+  delete process.env.INFINITEPAY_HANDLE;
+  fetchFalso(t);
+  const res = resFalsa();
+  await handler(req(PAYLOAD), res);
+  process.env.INFINITEPAY_HANDLE = antigo;
+  assert.equal(res.codigo, 500);
 });
 
 test('falha da Supabase na confirmação → 500 (InfinitePay reenvia)', async t => {

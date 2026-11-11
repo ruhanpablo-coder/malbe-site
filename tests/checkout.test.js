@@ -7,6 +7,7 @@ const handler = require('../api/checkout.js');
 process.env.SUPABASE_URL = 'https://exemplo.supabase.co';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'chave-teste';
 process.env.INFINITEPAY_API_KEY = 'inf-teste';
+process.env.FUNCOES_URL = 'https://malbe-site.vercel.app';
 
 function resFalsa() {
   const res = {
@@ -64,7 +65,7 @@ test('pedido criado no banco e link com webhook, validade e pagamento único', a
   // preço vem da RPC (banco), nunca do navegador nem do produtos.json
   assert.deepEqual(inf.corpo.items, [{ quantity: 2, price: 500, description: 'Vinho Teste' }]);
   assert.deepEqual(inf.corpo.webhook, {
-    url: 'https://www.malbevinhos.com.br/api/webhook-infinitepay',
+    url: 'https://malbe-site.vercel.app/api/webhook-infinitepay',
     events: ['paid', 'refunded', 'canceled'],
   });
   assert.equal(inf.corpo.options.single_payment, true);

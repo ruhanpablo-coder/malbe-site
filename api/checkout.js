@@ -4,7 +4,7 @@
    webhook de confirmação, validade de 24h e pagamento único.
    Env: INFINITEPAY_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY. */
 
-const { rpc, logIntegracao, aplicarCors, SITE } = require("./_lib.js");
+const { rpc, logIntegracao, aplicarCors, SITE, baseFuncoes } = require("./_lib.js");
 
 module.exports = async (req, res) => {
   if (aplicarCors(req, res)) return;
@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       description: String(i.descricao).slice(0, 100),
     })),
     redirect_url: `${SITE}/`,
-    webhook: { url: `${SITE}/api/webhook-infinitepay`, events: ["paid", "refunded", "canceled"] },
+    webhook: { url: `${baseFuncoes(env)}/api/webhook-infinitepay`, events: ["paid", "refunded", "canceled"] },
     options: {
       payment_methods_enabled: ["credit_card", "pix"],
       valid_until: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
