@@ -15,10 +15,9 @@ const ORIGENS = new Set([SITE, "https://malbevinhos.com.br"]);
 /* garrafa de 750 ml embalada para transporte */
 const GARRAFA = { peso: 1.5, largura: 12, altura: 40, comprimento: 12 };
 
-/* só transportadoras que aceitam bebida alcoólica em vidro sem homologação prévia
-   (guia do Melhor Envio): Jadlog exige Homologação de Embalagem, Loggi e Azul
-   não constam no guia — ficam fora até liberação */
-const TRANSPORTADORAS_PERMITIDAS = /^(correios|je?t|j&t)/i;
+/* só Correios por enquanto: aceitam bebida alcoólica em vidro bem embalada e
+   têm agência na cidade; demais transportadoras ficam fora até liberação */
+const TRANSPORTADORAS_PERMITIDAS = /^correios/i;
 
 module.exports = async (req, res) => {
   const origem = req.headers.origin || "";
