@@ -23,7 +23,7 @@ function resFalsa() {
 const REQ = {
   method: 'POST',
   headers: { origin: 'https://www.malbevinhos.com.br' },
-  body: { itens: { 'vinho-teste': 2 }, nome: 'Cliente X' },
+  body: { itens: { 'vinho-teste': 2 }, nome: 'Cliente X', telefone: '(47) 99999-1234' },
 };
 
 const RPC_OK = {
@@ -104,4 +104,30 @@ test('body inválido continua recusado', async t => {
   const res = resFalsa();
   await handler({ ...REQ, body: { itens: { x: 0 } } }, res);
   assert.equal(res.codigo, 400);
+});
+
+test('sem nome recusa com 400 antes de chamar o banco', async t => {
+  const chamadas = fetchFalso(t);
+  const res = resFalsa();
+  await handler({ ...REQ, body: { itens: { 'vinho-teste': 1 }, nome: ' ', telefone: '47999991234' } }, res);
+  assert.equal(res.codigo, 400);
+  assert.match(res.corpo.erro, /nome/i);
+  assert.ok(!chamadas.some(c => c.url.includes('/rpc/')), 'não devia chamar o banco');
+});
+
+test('sem WhatsApp válido recusa com 400', async t => {
+  fetchFalso(t);
+  for (const telefone of [undefined, '', '1234', 'abcdefghijk']) {
+    const res = resFalsa();
+    await handler({ ...REQ, body: { itens: { 'vinho-teste': 1 }, nome: 'Cliente X', telefone } }, res);
+    assert.equal(res.codigo, 400, `telefone ${JSON.stringify(telefone)} devia ser recusado`);
+    assert.match(res.corpo.erro, /whatsapp/i);
+  }
+});
+
+test('telefone vai para o banco só com dígitos', async t => {
+  const chamadas = fetchFalso(t);
+  await handler(REQ, resFalsa());
+  const rpc = chamadas.find(c => c.url.includes('/rpc/criar_pedido_site'));
+  assert.equal(rpc.corpo.p_cliente_telefone, '47999991234');
 });

@@ -20,6 +20,12 @@ module.exports = async (req, res) => {
   const pedido = (req.body && typeof req.body === "object") ? req.body : {};
   const itens = (pedido.itens && typeof pedido.itens === "object" && !Array.isArray(pedido.itens)) ? pedido.itens : {};
   const nome = typeof pedido.nome === "string" ? pedido.nome.trim().slice(0, 80) : "";
+  // Contato obrigatório: sem nome e WhatsApp não há como combinar a entrega.
+  const telefone = (typeof pedido.telefone === "string" ? pedido.telefone : "").replace(/\D/g, "").slice(0, 13);
+  if (nome.length < 2) return res.status(400).json({ erro: "Informe seu nome." });
+  if (telefone.length < 10 || telefone.length > 13) {
+    return res.status(400).json({ erro: "Informe um WhatsApp válido, com DDD." });
+  }
 
   const lista = [];
   for (const [slug, qtd] of Object.entries(itens)) {
@@ -32,7 +38,7 @@ module.exports = async (req, res) => {
   const order_nsu = `malbe-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   // 1) Pedido no gestão: preço e estoque validados no banco.
-  const criado = await rpc("criar_pedido_site", { p_order_nsu: order_nsu, p_cliente_nome: nome, p_itens: lista }, env);
+  const criado = await rpc("criar_pedido_site", { p_order_nsu: order_nsu, p_cliente_nome: nome, p_itens: lista, p_cliente_telefone: telefone }, env);
   if (!criado.ok) {
     const mensagem = (criado.dados && criado.dados.message) || "Não foi possível registrar o pedido.";
     await logIntegracao({ direcao: "checkout", request: { order_nsu, itens: lista }, response: criado.dados, statusHttp: criado.status, erro: mensagem }, env);
