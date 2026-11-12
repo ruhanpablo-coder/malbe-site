@@ -6,6 +6,7 @@ const LOJA = {
   destaque: "el-enemigo-bonarda",       // id do vinho em destaque no topo; vazio = primeiro disponível
   aviso: "Faça suas compras para as festas de fim de ano. Peça pelo WhatsApp.",   // faixa no topo do site; vazio = sem faixa
   pagamento: "https://malbe-site.vercel.app/api/checkout",   // URL da função de pagamento na Vercel; vazio = sem botão "Pagar online"
+  frete: "https://malbe-site.vercel.app/api/frete",           // URL da função de frete (Melhor Envio); vazio = sem cálculo de frete
   vantagens: [
     ["Pedido pelo WhatsApp", "Monte o carrinho e envie a mensagem pronta.", "chat"],
     ["Caixa fechada", "Leve 4 ou 6 garrafas do mesmo vinho.", "caixa"],
@@ -213,6 +214,40 @@ if(LOJA.pagamento){
     botao.innerHTML = rotulo;
     botao.disabled = false;
     alert(d.erro || "Não deu para gerar o pagamento agora. Tente de novo ou peça pelo WhatsApp.");
+  });
+}
+
+/* frete: a função na Vercel cota no Melhor Envio (Correios, Jadlog etc.) com peso e medidas do servidor */
+if(LOJA.frete){
+  $("#frete").hidden = false;
+  const campo = $("#cep"), saida = $("#frete-opcoes"), botao = $("#calcular-frete");
+  campo.value = ler("malbe-cep", "");
+  campo.addEventListener("input", () => {
+    const d = campo.value.replace(/\D/g, "").slice(0, 8);
+    campo.value = d.length > 5 ? `${d.slice(0,5)}-${d.slice(5)}` : d;
+  });
+  botao.addEventListener("click", async () => {
+    const cep = campo.value.replace(/\D/g, "");
+    if(cep.length !== 8){ saida.textContent = "Digite um CEP válido."; return; }
+    const ids = Object.keys(carrinho).filter(comprar);
+    if(!ids.length){ saida.textContent = "Adicione um vinho ao carrinho primeiro."; return; }
+    guardar("malbe-cep", campo.value);
+    botao.disabled = true;
+    saida.textContent = "Calculando…";
+    const r = await fetch(LOJA.frete, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ cep, itens: Object.fromEntries(ids.map(id => [id, carrinho[id]])) }),
+    }).catch(() => null);
+    const d = r ? await r.json().catch(() => ({})) : {};
+    botao.disabled = false;
+    if(r && r.ok && Array.isArray(d.opcoes) && d.opcoes.length){
+      saida.innerHTML = d.opcoes.map(o =>
+        `<div class="frete-opcao"><span>${esc(o.servico)}${o.prazo_dias ? ` · até ${o.prazo_dias} dias úteis` : ""}</span><span>${brl(o.valor)}</span></div>`
+      ).join("");
+    } else {
+      saida.textContent = d.aviso || d.erro || "Não deu para cotar agora. Combine a entrega pelo WhatsApp.";
+    }
   });
 }
 

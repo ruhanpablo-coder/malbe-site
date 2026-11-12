@@ -216,6 +216,12 @@ aside.carrinho.aberto{transform:none}
 .total{display:flex;justify-content:space-between;font-size:18px;font-weight:600;margin-bottom:12px}
 .carrinho label{display:block;font-size:14px;color:var(--cinza);margin-bottom:4px}
 .carrinho input{width:100%;border:1px solid var(--linha);border-radius:6px;padding:10px 12px;font:inherit;margin-bottom:12px;background:var(--areia)}
+.frete-linha{display:flex;gap:8px}
+.frete-linha button{flex-shrink:0;background:var(--branco);color:var(--bordo);border:1.5px solid var(--bordo);border-radius:6px;padding:0 16px;font-weight:600;margin-bottom:12px}
+.frete-linha button:disabled{opacity:.45}
+.frete-opcao{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:4px 0}
+.frete-opcao span:last-child{white-space:nowrap;font-weight:600}
+#frete-opcoes{color:var(--cinza);font-size:14px;margin-bottom:8px}
 .enviar{width:100%;background:var(--verde-wa);color:#fff;border:0;border-radius:6px;padding:14px;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px}
 .enviar:disabled{opacity:.45;cursor:not-allowed}
 .enviar svg{width:20px;height:20px}
@@ -389,6 +395,14 @@ aside.carrinho.aberto{transform:none}
   <div class="itens" id="itens"></div>
   <footer>
     <div class="total"><span>Total</span><span id="total">Sob consulta</span></div>
+    <div id="frete" hidden>
+      <label for="cep">Calcular frete (CEP)</label>
+      <div class="frete-linha">
+        <input id="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9">
+        <button id="calcular-frete" type="button">Calcular</button>
+      </div>
+      <div id="frete-opcoes"></div>
+    </div>
     <label for="nome">Seu nome</label>
     <input id="nome" autocomplete="name" placeholder="Para a gente saber com quem fala">
     <button class="enviar" id="enviar" disabled>
