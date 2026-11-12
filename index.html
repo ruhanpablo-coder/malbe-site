@@ -404,7 +404,9 @@ aside.carrinho.aberto{transform:none}
       <div id="frete-opcoes"></div>
     </div>
     <label for="nome">Seu nome</label>
-    <input id="nome" autocomplete="name" placeholder="Para a gente saber com quem fala">
+    <input id="nome" autocomplete="name" required placeholder="Para a gente saber com quem fala">
+    <label for="telefone">Seu WhatsApp</label>
+    <input id="telefone" type="tel" autocomplete="tel" inputmode="numeric" required placeholder="(47) 99999-0000 — para combinar a entrega">
     <button class="enviar" id="enviar" disabled>
       <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Z"/></svg>
       Enviar pedido pelo WhatsApp
