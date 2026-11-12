@@ -164,6 +164,17 @@ $("#fundo").addEventListener("click", fechar);
 document.addEventListener("keydown", e => { if(e.key==="Escape") fechar(); });
 
 $("#nome").value = ler("malbe-nome", "");
+$("#telefone").value = ler("malbe-telefone", "");
+/* nome e WhatsApp são obrigatórios para pagar online; devolve null se faltar */
+function contato(){
+  const nome = $("#nome").value.trim();
+  const telefone = $("#telefone").value.trim();
+  guardar("malbe-nome", nome); guardar("malbe-telefone", telefone);
+  if(nome.length < 2){ alert("Informe seu nome para continuar."); $("#nome").focus(); return null; }
+  const digitos = telefone.replace(/\D/g, "");
+  if(digitos.length < 10 || digitos.length > 13){ alert("Informe seu WhatsApp com DDD para combinar a entrega."); $("#telefone").focus(); return null; }
+  return { nome, telefone };
+}
 $("#enviar").addEventListener("click", () => {
   const nome = $("#nome").value.trim();
   guardar("malbe-nome", nome);
@@ -199,14 +210,14 @@ if(LOJA.pagamento){
   botao.addEventListener("click", async () => {
     const ids = Object.keys(carrinho).filter(comprar);
     if(!ids.length) return;
-    const nome = $("#nome").value.trim();
-    guardar("malbe-nome", nome);
+    const c = contato();
+    if(!c) return;
     botao.disabled = true;
     botao.textContent = "Gerando pagamento…";
     const r = await fetch(LOJA.pagamento, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ itens: Object.fromEntries(ids.map(id => [id, carrinho[id]])), nome }),
+      body: JSON.stringify({ itens: Object.fromEntries(ids.map(id => [id, carrinho[id]])), nome: c.nome, telefone: c.telefone }),
     }).catch(() => null);
     const d = r ? await r.json().catch(() => ({})) : {};
     if(r && r.ok && d.url){ location.href = d.url; return; }
