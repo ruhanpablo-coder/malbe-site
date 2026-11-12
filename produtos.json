@@ -1,6 +1,19 @@
 {
  "produtos": [
   {
+   "id": "teste-checkout",
+   "nome": "Vinho de Teste (não comprar)",
+   "vinicola": "Malbê",
+   "uva": "Teste",
+   "tipo": "Tinto",
+   "preco": 5,
+   "caixa": 1,
+   "foto": "img/teste-checkout.png",
+   "ativo": true,
+   "disponivel": true,
+   "descricao": "Produto temporário de R$ 5 para testar o pagamento online pela InfinitePay. Será removido após o teste."
+  },
+  {
    "id": "freixenet-x-dulce",
    "nome": "Freixenet X Dulce",
    "vinicola": "Finca Ferrer",
