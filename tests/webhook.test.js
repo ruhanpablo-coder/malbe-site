@@ -109,6 +109,41 @@ test('esgotou não republica dentro do webhook (cron cobre); notificação sai',
   assert.equal(notif.headers['x-integracao-secret'], 'segredo');
 });
 
+test('reenvio (repetido:true) não manda e-mail de novo', async t => {
+  const chamadas = fetchFalso(t, { confirmacao: { venda_id: 'V9', esgotou: false, repetido: true } });
+  const res = resFalsa();
+  await handler(req(PAYLOAD), res);
+  assert.equal(res.codigo, 200);
+  assert.ok(!chamadas.some(c => c.url.includes('/api/notificar')), 'e-mail duplicado no reenvio');
+});
+
+test('RPC recusa definitiva (400, ex. pedido estornado) → 200 para parar o reenvio', async t => {
+  // Sem isso a InfinitePay reenvia para sempre um aviso que nunca vai confirmar.
+  const chamadas = [];
+  t.mock.method(globalThis, 'fetch', async (url, opcoes = {}) => {
+    const u = String(url);
+    chamadas.push({ url: u, corpo: opcoes.body ? JSON.parse(opcoes.body) : null });
+    if (u.includes('payment_check')) return { ok: true, status: 200, json: async () => ({ success: true, paid: true, amount: 1000 }) };
+    if (u.includes('confirmar_pedido_site')) return { ok: false, status: 400, json: async () => ({ message: 'Pedido malbe-1 está estornado.' }) };
+    return { ok: true, status: 201, json: async () => null };
+  });
+  const res = resFalsa();
+  await handler(req(PAYLOAD), res);
+  assert.equal(res.codigo, 200);
+  assert.equal(res.corpo.ok, false);
+  assert.ok(!chamadas.some(c => c.url.includes('/api/notificar')));
+  const log = chamadas.filter(c => c.url.includes('integracao_logs')).map(c => c.corpo).find(l => l.erro && l.erro.includes('definitiv'));
+  assert.ok(log, 'recusa definitiva precisa ficar no log');
+});
+
+test('valor pago vem do payment_check, não do payload forjável', async t => {
+  const chamadas = fetchFalso(t);
+  const res = resFalsa();
+  await handler(req({ ...PAYLOAD, paid_amount: 999999 }), res);
+  const conf = chamadas.find(c => c.url.includes('confirmar_pedido_site'));
+  assert.equal(conf.corpo.p_paid_amount, 1000);
+});
+
 test('payment_check fora do ar (não-2xx) → 500 para a InfinitePay reenviar', async t => {
   const chamadas = [];
   t.mock.method(globalThis, 'fetch', async (url, opcoes = {}) => {

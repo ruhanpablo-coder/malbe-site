@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
   if (!criado.ok) {
     const mensagem = (criado.dados && criado.dados.message) || "Não foi possível registrar o pedido.";
     await logIntegracao({ direcao: "checkout", request: { order_nsu, itens: lista }, response: criado.dados, statusHttp: criado.status, erro: mensagem }, env);
-    return res.status(400).json({ erro: mensagem.replace(/^.*?: /, (m) => m).trim() });
+    return res.status(400).json({ erro: mensagem.trim() });
   }
   const pedidoId = criado.dados.pedido_id;
 
@@ -118,7 +118,7 @@ module.exports = async (req, res) => {
       single_payment: true,
     },
   };
-  if (nome) corpo.customer = { name: nome };
+  corpo.customer = { name: nome };
 
   let resposta, dados;
   try {

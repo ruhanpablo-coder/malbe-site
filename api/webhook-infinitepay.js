@@ -67,9 +67,17 @@ module.exports = async (req, res) => {
       p_transaction_nsu: transaction_nsu,
       p_invoice_slug: invoice_slug,
       p_receipt_url: payload.receipt_url || null,
-      p_paid_amount: Number.isFinite(payload.paid_amount) ? payload.paid_amount : null,
+      // Valor verificado pelo payment_check; o payload do webhook é forjável.
+      p_paid_amount: Number.isFinite(dadosCheck.amount) ? dadosCheck.amount : null,
     }, env);
     if (!confirmacao.ok) {
+      /* 400 é a RPC recusando de vez (pedido estornado, cancelado, pago com
+         outra transação, valor menor que o total): reenviar nunca vai mudar
+         o resultado, então 200 encerra o reenvio da InfinitePay. */
+      if (confirmacao.status === 400) {
+        await logIntegracao({ direcao: "webhook", request: { order_nsu, evento }, response: confirmacao.dados, statusHttp: confirmacao.status, erro: "confirmação recusada em definitivo" }, env);
+        return res.status(200).json({ ok: false });
+      }
       await logIntegracao({ direcao: "webhook", request: { order_nsu, evento }, response: confirmacao.dados, statusHttp: confirmacao.status, erro: "confirmação falhou" }, env);
       return res.status(500).json({ erro: "Falha ao confirmar o pedido." });
     }
@@ -80,7 +88,8 @@ module.exports = async (req, res) => {
        nesse meio-tempo. */
 
     // Aviso de venda para o gestão (e-mail); falha não derruba o webhook.
-    if (env.GESTAO_URL && env.INTEGRACAO_SECRET) {
+    // Reenvio do mesmo pagamento (repetido) não manda e-mail de novo.
+    if (env.GESTAO_URL && env.INTEGRACAO_SECRET && !(confirmacao.dados && confirmacao.dados.repetido)) {
       try {
         await fetch(`${env.GESTAO_URL}/api/notificar`, {
           method: "POST",

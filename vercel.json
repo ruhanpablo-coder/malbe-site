@@ -1,8 +1,5 @@
 {
   "functions": {
-    "api/checkout.js": {
-      "includeFiles": "produtos.json"
-    },
     "api/frete.js": {
       "includeFiles": "produtos.json"
     }
