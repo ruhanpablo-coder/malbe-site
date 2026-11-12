@@ -138,6 +138,7 @@ function mudar(id, d){
   carrinho[id] = Math.max(0, (carrinho[id]||0) + d);
   if(!carrinho[id]) delete carrinho[id];
   guardar("malbe-carrinho", carrinho);
+  limparFrete();   /* o peso mudou: a cotação anterior não vale mais */
   desenharCarrinho(); desenharGrade(); desenharDestaque();
 }
 function desenharCarrinho(){
@@ -145,7 +146,8 @@ function desenharCarrinho(){
   const total = totalPedido(ids);
   const garrafas = ids.reduce((s,id) => s + carrinho[id], 0);
   $("#contador").textContent = garrafas;
-  $("#total").textContent = total === null ? "Sob consulta" : brl(total);
+  const totalFinal = total === null ? null : total + (freteEscolhido ? freteEscolhido.valor : 0);
+  $("#total").textContent = totalFinal === null ? "Sob consulta" : brl(totalFinal) + (freteEscolhido ? " com frete" : "");
   $("#enviar").disabled = !ids.length;
   /* pagar online exige que todo item do pedido tenha preço */
   $("#pagar").disabled = !ids.length || total === null;
@@ -213,12 +215,20 @@ if(LOJA.pagamento){
     if(!ids.length) return;
     const c = contato();
     if(!c) return;
+    const corpo = { itens: Object.fromEntries(ids.map(id => [id, carrinho[id]])), nome: c.nome, telefone: c.telefone };
+    if(freteEscolhido){
+      const endereco = enderecoEntrega();
+      if(!endereco) return;
+      corpo.frete = freteEscolhido.servico;
+      corpo.cep = $("#cep").value.replace(/\D/g, "");
+      corpo.endereco = endereco;
+    }
     botao.disabled = true;
     botao.textContent = "Gerando pagamento…";
     const r = await fetch(LOJA.pagamento, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ itens: Object.fromEntries(ids.map(id => [id, carrinho[id]])), nome: c.nome, telefone: c.telefone }),
+      body: JSON.stringify(corpo),
     }).catch(() => null);
     const d = r ? await r.json().catch(() => ({})) : {};
     if(r && r.ok && d.url){ location.href = d.url; return; }
@@ -228,14 +238,28 @@ if(LOJA.pagamento){
   });
 }
 
-/* frete: a função na Vercel cota no Melhor Envio (Correios, Jadlog etc.) com peso e medidas do servidor */
+/* frete: a função na Vercel cota no Melhor Envio com peso e medidas do servidor.
+   A opção escolhida entra no total e vai junto no pagamento online (o servidor
+   recota — o navegador só diz qual serviço quer); endereço vira obrigatório. */
 if(LOJA.frete){
   $("#frete").hidden = false;
   const campo = $("#cep"), saida = $("#frete-opcoes"), botao = $("#calcular-frete");
+  let opcoes = [];
   campo.value = ler("malbe-cep", "");
   campo.addEventListener("input", () => {
     const d = campo.value.replace(/\D/g, "").slice(0, 8);
     campo.value = d.length > 5 ? `${d.slice(0,5)}-${d.slice(5)}` : d;
+    limparFrete(); desenharCarrinho();
+  });
+  const enderecoGuardado = ler("malbe-endereco", {});
+  for(const k of ["rua","numero","complemento","bairro","cidade"]){
+    if(typeof enderecoGuardado[k] === "string") $("#"+k).value = enderecoGuardado[k];
+  }
+  saida.addEventListener("change", e => {
+    const n = +e.target.value;
+    freteEscolhido = opcoes[n] || null;
+    $("#endereco").hidden = !freteEscolhido;
+    desenharCarrinho();
   });
   botao.addEventListener("click", async () => {
     const cep = campo.value.replace(/\D/g, "");
@@ -253,13 +277,34 @@ if(LOJA.frete){
     const d = r ? await r.json().catch(() => ({})) : {};
     botao.disabled = false;
     if(r && r.ok && Array.isArray(d.opcoes) && d.opcoes.length){
-      saida.innerHTML = d.opcoes.map(o =>
-        `<div class="frete-opcao"><span>${esc(o.servico)}${o.prazo_dias ? ` · até ${o.prazo_dias} dias úteis` : ""}</span><span>${brl(o.valor)}</span></div>`
-      ).join("");
+      opcoes = d.opcoes;
+      saida.innerHTML = d.opcoes.map((o, n) =>
+        `<label class="frete-opcao"><span><input type="radio" name="frete-opcao" value="${n}"> ${esc(o.servico)}${o.prazo_dias ? ` · até ${o.prazo_dias} dias úteis` : ""}</span><span>${brl(o.valor)}</span></label>`
+      ).join("") + `<label class="frete-opcao"><span><input type="radio" name="frete-opcao" value="-1" checked> Combinar a entrega pelo WhatsApp</span><span></span></label>`;
     } else {
+      opcoes = [];
       saida.textContent = d.aviso || d.erro || "Não deu para cotar agora. Combine a entrega pelo WhatsApp.";
     }
   });
+}
+/* opção de frete escolhida ({ servico, valor }) ou null = combinar pelo WhatsApp */
+let freteEscolhido = null;
+function limparFrete(){
+  freteEscolhido = null;
+  const saida = $("#frete-opcoes");
+  if(saida && saida.querySelector("input")) saida.innerHTML = "";
+  const be = $("#endereco");
+  if(be) be.hidden = true;
+}
+/* endereço de entrega obrigatório quando há frete; devolve null se faltar algo */
+function enderecoEntrega(){
+  const pegar = id => $("#"+id).value.trim();
+  const endereco = { rua: pegar("rua"), numero: pegar("numero"), complemento: pegar("complemento"), bairro: pegar("bairro"), cidade: pegar("cidade") };
+  guardar("malbe-endereco", endereco);
+  for(const [k, rotulo] of [["rua","a rua"],["numero","o número"],["bairro","o bairro"],["cidade","a cidade"]]){
+    if(!endereco[k]){ alert(`Informe ${rotulo} para a entrega.`); $("#"+k).focus(); return null; }
+  }
+  return endereco;
 }
 
 /* aviso de idade */

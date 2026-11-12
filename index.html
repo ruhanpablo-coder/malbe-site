@@ -402,6 +402,18 @@ aside.carrinho.aberto{transform:none}
         <button id="calcular-frete" type="button">Calcular</button>
       </div>
       <div id="frete-opcoes"></div>
+      <div id="endereco" hidden>
+        <label for="rua">Endereço de entrega</label>
+        <input id="rua" autocomplete="address-line1" placeholder="Rua / avenida">
+        <div class="frete-linha">
+          <input id="numero" autocomplete="address-line2" placeholder="Número">
+          <input id="complemento" placeholder="Complemento (opcional)">
+        </div>
+        <div class="frete-linha">
+          <input id="bairro" placeholder="Bairro">
+          <input id="cidade" autocomplete="address-level2" placeholder="Cidade">
+        </div>
+      </div>
     </div>
     <label for="nome">Seu nome</label>
     <input id="nome" autocomplete="name" required placeholder="Para a gente saber com quem fala">

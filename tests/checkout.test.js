@@ -131,3 +131,68 @@ test('telefone vai para o banco só com dígitos', async t => {
   const rpc = chamadas.find(c => c.url.includes('/rpc/criar_pedido_site'));
   assert.equal(rpc.corpo.p_cliente_telefone, '47999991234');
 });
+
+/* ===== frete no checkout ===== */
+process.env.MELHOR_ENVIO_TOKEN = 'me-teste';
+process.env.FRETE_CEP_ORIGEM = '17702370';
+
+const REQ_FRETE = { ...REQ, body: { ...REQ.body, frete: 'Correios PAC', cep: '01310-100',
+  endereco: { rua: 'Av. Paulista', numero: '1000', complemento: '', bairro: 'Bela Vista', cidade: 'São Paulo' } } };
+
+function fetchComFrete(t, { meResposta } = {}) {
+  const chamadas = [];
+  t.mock.method(globalThis, 'fetch', async (url, opcoes = {}) => {
+    const u = String(url);
+    chamadas.push({ url: u, metodo: opcoes.method, corpo: opcoes.body ? JSON.parse(opcoes.body) : null });
+    if (u.includes('/rpc/criar_pedido_site')) return { ok: true, status: 200, json: async () => RPC_OK };
+    if (u.includes('melhorenvio.com.br')) {
+      const r = meResposta || [{ name: 'PAC', company: { name: 'Correios' }, price: '26.31', delivery_time: 7 }];
+      return { ok: true, status: 200, json: async () => r };
+    }
+    if (u.includes('infinitepay.io/links')) return { ok: true, status: 200, json: async () => ({ url: 'https://pay.infinitepay.io/abc' }) };
+    return { ok: true, status: 204, json: async () => null };
+  });
+  return chamadas;
+}
+
+test('frete recotado no servidor entra como item e é gravado no pedido', async t => {
+  const chamadas = fetchComFrete(t);
+  const res = resFalsa();
+  await handler(REQ_FRETE, res);
+  assert.equal(res.codigo, 200);
+  const link = chamadas.find(c => c.url.includes('infinitepay.io/links'));
+  const itemFrete = link.corpo.items.find(i => /frete/i.test(i.description));
+  assert.equal(itemFrete.price, 2631);
+  assert.equal(itemFrete.quantity, 1);
+  const patch = chamadas.find(c => c.url.includes('/rest/v1/pedidos') && c.metodo === 'PATCH' && c.corpo && c.corpo.custo_entrega !== undefined);
+  assert.equal(patch.corpo.custo_entrega, 2631);
+  assert.equal(patch.corpo.entrega_cep, '01310100');
+  assert.equal(patch.corpo.entrega_rua, 'Av. Paulista');
+});
+
+test('frete escolhido some na recotação: 400 e nenhum link criado', async t => {
+  const chamadas = fetchComFrete(t, { meResposta: [{ name: 'SEDEX', company: { name: 'Correios' }, price: '29.60', delivery_time: 3 }] });
+  const res = resFalsa();
+  await handler(REQ_FRETE, res);
+  assert.equal(res.codigo, 400);
+  assert.ok(!chamadas.some(c => c.url.includes('infinitepay.io/links')), 'não devia criar o link');
+});
+
+test('frete sem endereço completo recusa com 400 antes do banco', async t => {
+  const chamadas = fetchComFrete(t);
+  const res = resFalsa();
+  await handler({ ...REQ, body: { ...REQ_FRETE.body, endereco: { rua: 'X', numero: '', bairro: 'Y', cidade: 'Z' } } }, res);
+  assert.equal(res.codigo, 400);
+  assert.match(res.corpo.erro, /endereço/i);
+  assert.ok(!chamadas.some(c => c.url.includes('/rpc/')), 'não devia chamar o banco');
+});
+
+test('sem frete nada muda: link só com os itens e nenhum PATCH de frete', async t => {
+  const chamadas = fetchComFrete(t);
+  const res = resFalsa();
+  await handler(REQ, res);
+  assert.equal(res.codigo, 200);
+  const link = chamadas.find(c => c.url.includes('infinitepay.io/links'));
+  assert.ok(!link.corpo.items.some(i => /frete/i.test(i.description)));
+  assert.ok(!chamadas.some(c => c.corpo && c.corpo.custo_entrega !== undefined));
+});

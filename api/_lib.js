@@ -64,4 +64,73 @@ function aplicarCors(req, res) {
   return false;
 }
 
-module.exports = { rpc, logIntegracao, aplicarCors, SITE, baseFuncoes };
+/* ===== Frete (Melhor Envio) ===== */
+
+/* garrafa de 750 ml embalada para transporte */
+const GARRAFA = { peso: 1.5, largura: 12, altura: 40, comprimento: 12 };
+
+/* só Correios por enquanto: aceitam bebida alcoólica em vidro bem embalada e
+   têm agência na cidade; demais transportadoras ficam fora até liberação */
+const TRANSPORTADORAS_PERMITIDAS = /^correios/i;
+
+/* Cota o frete no Melhor Envio. itens = [{ quantidade, valorSeguro }] (uma
+   entrada por vinho; valorSeguro em reais). Devolve { ok, opcoes } com
+   [{ servico, valor, prazo_dias }] ordenado por preço, ou { ok: false, erro }.
+   Env: MELHOR_ENVIO_TOKEN, FRETE_CEP_ORIGEM, MELHOR_ENVIO_EMAIL (opcional). */
+async function cotarFrete(cepDestino, itens, env) {
+  const token = env.MELHOR_ENVIO_TOKEN;
+  const cepOrigem = (env.FRETE_CEP_ORIGEM || "").replace(/\D/g, "");
+  if (!token || cepOrigem.length !== 8) {
+    return { ok: false, erro: "Frete não configurado (MELHOR_ENVIO_TOKEN / FRETE_CEP_ORIGEM)." };
+  }
+
+  const products = itens.map((i, n) => ({
+    id: String(n),
+    quantity: i.quantidade,
+    weight: GARRAFA.peso,
+    width: GARRAFA.largura,
+    height: GARRAFA.altura,
+    length: GARRAFA.comprimento,
+    insurance_value: Number.isFinite(i.valorSeguro) && i.valorSeguro > 0 ? i.valorSeguro : 0,
+  }));
+
+  let resposta, dados;
+  try {
+    resposta = await fetch("https://melhorenvio.com.br/api/v2/me/shipment/calculate", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Agent": `Malbê Vinhos (${env.MELHOR_ENVIO_EMAIL || SITE})`,
+      },
+      body: JSON.stringify({
+        from: { postal_code: cepOrigem },
+        to: { postal_code: cepDestino },
+        products,
+      }),
+    });
+    dados = await resposta.json();
+  } catch (e) {
+    return { ok: false, erro: "Cotação indisponível agora. Tente de novo." };
+  }
+  if (!resposta.ok || !Array.isArray(dados)) {
+    console.error("Melhor Envio recusou:", resposta.status, JSON.stringify(dados));
+    return { ok: false, erro: "Não deu para cotar o frete. Combine a entrega pelo WhatsApp." };
+  }
+
+  const opcoes = dados
+    .filter(s => !s.error && s.price)
+    .filter(s => TRANSPORTADORAS_PERMITIDAS.test((s.company && s.company.name) || ""))
+    .map(s => ({
+      servico: `${s.company && s.company.name ? s.company.name + " " : ""}${s.name}`.trim(),
+      valor: Number(s.price),
+      prazo_dias: Number(s.delivery_time) || null,
+    }))
+    .filter(o => Number.isFinite(o.valor) && o.valor > 0)
+    .sort((a, b) => a.valor - b.valor);
+
+  return { ok: true, opcoes };
+}
+
+module.exports = { rpc, logIntegracao, aplicarCors, SITE, baseFuncoes, cotarFrete };
