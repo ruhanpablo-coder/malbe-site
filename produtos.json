@@ -36,7 +36,7 @@
    "caixa": 6,
    "foto": "img/cosecha-tardia-tinto.png",
    "ativo": true,
-   "disponivel": true,
+   "disponivel": false,
    "descricao": "Tinto doce de Merlot, em garrafa de 750 ml."
   },
   {
